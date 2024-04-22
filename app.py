@@ -1,15 +1,13 @@
 import tkinter as tk
-from drawPiano import drawPiano
-
-
-def clicked(color, num):
-    print(color + ': ' + str(num))
-
+import pygame
+from quizManager import quizManager
+pygame.mixer.init()
+pygame.mixer.set_num_channels(16)
 
 root = tk.Tk()
 root.geometry('1000x400')
 
-Keys = drawPiano(root)
-
+game = quizManager(root, 0, 3, 2)
+game.play()
 
 root.mainloop()
