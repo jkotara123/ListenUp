@@ -1,3 +1,6 @@
+from gameModes.abstractMode import abstractMode
+
+
 class questionHandler:
     _instance = None
 
@@ -12,12 +15,12 @@ class questionHandler:
             return
         self.answer = set()
         self.expected = set()
-        self.gameMode = None
+        self.gameMode: abstractMode = None
         self.__initialized = True
         self.question_count = 0
 
-    def set_mode(self, gameMode):
-        self.gameMode = gameMode
+    def set_mode(self, gameMode: abstractMode):
+        self.gameMode: abstractMode = gameMode
 
     def next_question(self):
         if self.question_count == 5:
