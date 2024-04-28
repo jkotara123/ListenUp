@@ -47,5 +47,5 @@ class Key(tk.Button):
 
     def play_key(self, color=None, duration=0.5):
         self.play_sound()
-        if color != None:
+        if not (color is None):
             self.__change_color(color, duration)
