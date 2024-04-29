@@ -1,6 +1,11 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 from Interval_game_mode_window import IntervalGameModeMenu
+import pygame
+
+
+pygame.mixer.init()
+pygame.mixer.set_num_channels(16)
 
 
 class Menu:
@@ -44,7 +49,7 @@ class Menu:
                                         foreground="black",justify="center",anchor="n",bg="white")
         main_menu_text_label.place(relx=0,rely=0,x=0,y=2,relwidth=1)
 
-        button_width = 25
+        button_width = 26
         button_height = 1
         vertical_spacing = 35
 

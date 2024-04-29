@@ -15,21 +15,27 @@ class questionHandler:
         self.gameMode = None
         self.__initialized = True
         self.question_count = 0
+        self.current_quiz_manager = None
 
     def set_mode(self, gameMode):
         self.gameMode = gameMode
 
+
+    def set_current_quiz_manager (self,quiz_manager):
+        self.current_quiz_manager = quiz_manager
+
+
     def next_question(self):
-        if self.question_count == 5:
-            print("Koniec gry!")
-            self.expected.clear()
-        else:
-            self.question_count += 1
-            self.expected = self.gameMode.get_new_question()
-            self.__clear_answer_buff()
-            print("New question!\n")
-            print(self.expected, self.answer)
-            self.play_question()
+        self.question_count += 1
+        self.expected = self.gameMode.get_new_question()
+        self.__clear_answer_buff()
+        print("New question!\n")
+        print(self.expected, self.answer)
+        # self.play_question()
+
+
+    def get_question_duration (self):
+        return 1
 
     def check_answer(self, key):
         print(self.expected)
@@ -38,10 +44,14 @@ class questionHandler:
         self.answer.add(key)
         if self.answer == self.expected:  # calkowicie poprawna odpowiedz -> klawisz na zielono
             print("Correct")
+            if self.current_quiz_manager is not None:
+                self.current_quiz_manager.question_passed()
             return 1
         for ans in self.answer:
             if ans not in self.expected:  # zla odpowiedz -> klawisz na czerwono
                 print("Incorrect")
+                if self.current_quiz_manager is not None:
+                    self.current_quiz_manager.question_failed()
                 return 0
         return -1  # dobra odpowiedz -> klawisz na zielono
 

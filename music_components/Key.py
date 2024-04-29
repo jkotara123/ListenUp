@@ -34,7 +34,7 @@ class Key(tk.Button):
     def clicked(self):
         def go_next():  # jak odpalic tylko jeden watek z pytaniem jednoczesnie
             sleep(2)
-            self.handler.next_question()
+            # self.handler.next_question()
         response = self.handler.check_answer(self)
         if response == 0:
             self.play_key('red')
