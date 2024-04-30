@@ -1,4 +1,5 @@
 from questionHandler import questionHandler
+from PianoDisabling import PianoDisabler
 
 
 max_listens = 3
@@ -9,6 +10,9 @@ class QuizManager:
         self.piano = piano
         self.question_handler = questionHandler()
         self.question_handler.set_mode(game_mode)
+        self.piano_disabler = PianoDisabler()
+        self.piano_disabler.enable_piano()
+        self.piano_disabler.set_piano(piano)
         self.question_handler.set_current_quiz_manager(self)
         self.current_question = None
         self.gamemode_menu_class = gamemode_menu_class
@@ -34,6 +38,7 @@ class QuizManager:
 
     def next_question (self):
         self.listens = 0
+        self.piano_disabler.enable_piano()
         self.question_handler.next_question()
 
 
@@ -47,9 +52,11 @@ class QuizManager:
 
     def question_passed (self):
         print(":)")
-        self.gamemode_menu_class.display_tick()
+        self.piano_disabler.disable_piano()
+        self.gamemode_menu_class.answered_correctly()
 
 
     def question_failed (self):
         print(":(")
-        self.gamemode_menu_class.display_cross()
+        self.piano_disabler.disable_piano()
+        self.gamemode_menu_class.answered_incorrectly()

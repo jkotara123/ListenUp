@@ -1,22 +1,36 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 import other_resources
+import threading
 from time import sleep
 from music_components.Piano import Piano
 from quizManager import QuizManager, max_listens
 from gameModes.IntervalMode import IntervalMode
 
+
+fontname = "Calibri"
+
+correct_answer_colors = ["green2","green3","green4","darkgreen"]
+incorrect_answer_colors = ["red","red2","red3","red4"]
+
 class IntervalGameModeMenu:
     def __init__ (self,launch_immediately=True,octaves=2,lowest_octave=2):
         self.interval_gamemode_menu_window = None
         self.piano = None
+        self.quiz_manager = None
+
         self.play_progress_bar = 0
         self.question_counter = 1
+        self.correct_ans_counter = 0
+        self.incorrect_ans_counter = 0
         self.play_image = None
-        self.quiz_manager = None
         self.listens_left_label = None
         self.question_counter_label = None
         self.question_pass_label = None
+        self.correct_ans_counter_label = None
+        self.incorrect_ans_counter_label = None
+        self.next_question_button = None
+        self.next_question_button_grey = True
 
         self.__prepare_interval_game_mode_menu()
         self.__prepare_piano(octaves,lowest_octave)
@@ -69,30 +83,91 @@ class IntervalGameModeMenu:
             self.interval_gamemode_menu_window.update()
 
 
-    def display_tick (self):
-        if self.question_pass_label is not None:
-            self.question_pass_label.destroy()
-        tick_image = Image.open("other_resources/green_tick.png")
-        tick_image = tick_image.resize((50,50))
-        tick_image = ImageTk.PhotoImage(tick_image)
-        bg_image_label = tk.Label(self.interval_gamemode_menu_window, image=tick_image)
-        bg_image_label.place(x=0,y=self.interval_gamemode_menu_window.winfo_width())
-        bg_image_label.image = tick_image
-        self.question_pass_label = bg_image_label
+    def answered_correctly (self):
+        self.correct_ans_counter += 1
+        self.correct_ans_counter_label.configure(text=f"{self.correct_ans_counter}")
+        self.next_question_button_grey = False
+        self.next_question_button.config(fg="black")
+        self.interval_gamemode_menu_window.update()
 
-    def display_cross (self):
-        if self.question_pass_label is not None:
-            self.question_pass_label.destroy()
-        tick_image = Image.open("other_resources/red_cross.png")
-        tick_image = tick_image.resize((50, 50))
-        tick_image = ImageTk.PhotoImage(tick_image)
-        bg_image_label = tk.Label(self.interval_gamemode_menu_window, image=tick_image)
-        bg_image_label.place(x=0, y=self.interval_gamemode_menu_window.winfo_width())
-        bg_image_label.image = tick_image
-        self.question_pass_label = bg_image_label
+        def pulse ():
+            sleep_time = 0.3
+            current_question_number = self.question_counter
+
+            for i in range (1,len(correct_answer_colors)):
+                if current_question_number != self.question_counter:
+                    self.incorrect_ans_counter_label.config(fg=incorrect_answer_colors[0])
+                    self.interval_gamemode_menu_window.update()
+                    return None
+                self.correct_ans_counter_label.config(fg=correct_answer_colors[i])
+                sleep(sleep_time)
+                self.interval_gamemode_menu_window.update()
+            for i in range (len(correct_answer_colors)-1,-1,-1):
+                if current_question_number != self.question_counter:
+                    self.incorrect_ans_counter_label.config(fg=incorrect_answer_colors[0])
+                    self.interval_gamemode_menu_window.update()
+                    return None
+                self.correct_ans_counter_label.config(fg=correct_answer_colors[i])
+                sleep(sleep_time)
+                self.interval_gamemode_menu_window.update()
+
+        pulse_thread = threading.Thread(target=pulse,args=())
+        pulse_thread.start()
+
+
+    def answered_incorrectly (self):
+        self.incorrect_ans_counter += 1
+        self.incorrect_ans_counter_label.configure(text=f"{self.incorrect_ans_counter}")
+        self.next_question_button_grey = False
+        self.next_question_button.config(fg="black")
+        self.interval_gamemode_menu_window.update()
+
+        def pulse():
+            sleep_time = 0.3
+            current_question_number = self.question_counter
+
+            for i in range(1, len(correct_answer_colors)):
+                if current_question_number != self.question_counter:
+                    self.incorrect_ans_counter_label.config(fg=incorrect_answer_colors[0])
+                    self.interval_gamemode_menu_window.update()
+                    return None
+                self.incorrect_ans_counter_label.config(fg=incorrect_answer_colors[i])
+                self.interval_gamemode_menu_window.update()
+                sleep(sleep_time)
+            for i in range(len(correct_answer_colors)-1,-1,-1):
+                if current_question_number != self.question_counter:
+                    self.incorrect_ans_counter_label.config(fg=incorrect_answer_colors[0])
+                    self.interval_gamemode_menu_window.update()
+                    return None
+                self.incorrect_ans_counter_label.config(fg=incorrect_answer_colors[i])
+                sleep(sleep_time)
+                self.interval_gamemode_menu_window.update()
+
+        pulse_thread = threading.Thread(target=pulse, args=())
+        pulse_thread.start()
 
 
     def __next_question_clicked (self):
+        if not self.next_question_button_grey:
+            play_sound_image = Image.open(f"other_resources/play_sound/play_sound{0}.png")
+            play_sound_image = play_sound_image.resize((240, 60))
+            play_sound_image = ImageTk.PhotoImage(play_sound_image)
+            self.play_image.configure(image=play_sound_image)
+            self.play_image.image = play_sound_image
+            self.play_progress_bar = 0
+            self.interval_gamemode_menu_window.update()
+            self.quiz_manager.next_question()
+            self.question_counter += 1
+            self.question_counter_label.configure(text=f"Question {self.question_counter}")
+            self.listens_left_label.configure(text=f"Listens left: {max_listens}")
+            self.next_question_button_grey = True
+            self.next_question_button.config(fg="grey")
+            self.interval_gamemode_menu_window.update()
+            if self.question_pass_label is not None:
+                self.question_pass_label.destroy()
+
+
+    def __skip_question_clicked (self):
         play_sound_image = Image.open(f"other_resources/play_sound/play_sound{0}.png")
         play_sound_image = play_sound_image.resize((240, 60))
         play_sound_image = ImageTk.PhotoImage(play_sound_image)
@@ -104,25 +179,16 @@ class IntervalGameModeMenu:
         self.question_counter += 1
         self.question_counter_label.configure(text=f"Question {self.question_counter}")
         self.listens_left_label.configure(text=f"Listens left: {max_listens}")
+        self.next_question_button_grey = True
+        self.next_question_button.config(fg="grey")
         self.interval_gamemode_menu_window.update()
         if self.question_pass_label is not None:
             self.question_pass_label.destroy()
 
 
-    def __skip_question_clicked (self):
-        ...
-
-
     def __prepare_piano (self,octaves,lowest_octave):
-        # height = 140
-        # width = 260*octaves
         piano_window = self.interval_gamemode_menu_window
-        # piano_window.geometry(f"{width}x{height}")
-        # piano_window.attributes('-fullscreen',False)
-        # piano_window.resizable(False,False)
-        # piano_window.geometry("-200-200")
         self.piano = Piano(piano_window,octaves,lowest_octave)
-        # piano_window.mainloop()
 
         game_mode = IntervalMode(self.piano)
 
@@ -166,34 +232,44 @@ class IntervalGameModeMenu:
         play_sound_label.image = play_sound_image
 
         main_menu_text = f"Question 1"
-        main_menu_text_label = tk.Label(menu_window,text=main_menu_text,font=("Times New Roman",25,"bold"),
+        main_menu_text_label = tk.Label(menu_window,text=main_menu_text,font=(fontname,25,"bold"),
                                         foreground="black",justify="center",anchor="n",bg="white")
         self.question_counter_label = main_menu_text_label
         main_menu_text_label.place(relx=0,rely=0,x=0,y=2,relwidth=1)
 
         relistens_left_text = f"Listens left: {max_listens}"
         # relistens_left_text = f"Relistens left: {3}"
-        main_menu_text_label = tk.Label(menu_window,text=relistens_left_text,font=("Times New Roman",14,"bold"),
+        main_menu_text_label = tk.Label(menu_window,text=relistens_left_text,font=(fontname,14,"bold"),
                                         foreground="black",justify="center",anchor="n",bg="white")
         self.listens_left_label = main_menu_text_label
         main_menu_text_label.place(relx=0.5,rely=0.125,x=0,anchor=tk.CENTER)
 
-        next_question_button = tk.Button(menu_window, text="Next Question", font=("Times New Roman",12,"bold"), foreground="black",
-                                  highlightbackground="black",highlightthickness=1,bd=1,background="white",
+        next_question_button = tk.Button(menu_window, text="Next Question", font=(fontname,10,"bold"), foreground="grey",
+                                  highlightbackground="grey",highlightthickness=1,bd=1,background="white",
                                   width=button_width, height=button_height,
                                   command=self.__next_question_clicked)
+        self.next_question_button = next_question_button
 
-        skip_question_button = tk.Button(menu_window, text="Skip Question", font=("Times New Roman",12,"bold"), foreground="black",
+        skip_question_button = tk.Button(menu_window, text="Skip Question", font=(fontname,10,"bold"), foreground="black",
                                          highlightbackground="black",highlightthickness=1,bd=1,background="white",
                                          width=button_width,height=button_height,
-                                         command=self.__next_question_clicked)
+                                         command=self.__skip_question_clicked)
 
         next_question_button.place(relx=0.5,anchor=tk.CENTER,rely=0.325)
         skip_question_button.place(relx=0.5,anchor=tk.CENTER,rely=0.325+(vertical_spacing/height))
         # skip_question_button.place(relx=0.5, anchor=tk.CENTER, rely=0.325)
 
+        correct_ans_label = tk.Label(menu_window, text=f"{self.correct_ans_counter}", font=(fontname,16,"bold"), background="white")
+        correct_ans_label.config(fg="green2")
+        incorrect_ans_label = tk.Label(menu_window, text=f"{self.incorrect_ans_counter}", font=(fontname,16,"bold"), background="white")
+        incorrect_ans_label.config(fg="red")
+        correct_ans_label.place(x=36,anchor=tk.CENTER,y=height-80)
+        incorrect_ans_label.place(x=width-36,anchor=tk.CENTER,y=height-80)
+
+        self.correct_ans_counter_label = correct_ans_label
+        self.incorrect_ans_counter_label = incorrect_ans_label
+
         self.play_image = play_sound_label
         self.interval_gamemode_menu_window = menu_window
 
 
-# IntervalGameModeMenu(launch_immediately=True)

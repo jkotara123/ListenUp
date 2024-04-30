@@ -4,6 +4,8 @@ from Interval_game_mode_window import IntervalGameModeMenu
 import pygame
 
 
+font_name = "Calibri"
+
 pygame.mixer.init()
 pygame.mixer.set_num_channels(16)
 
@@ -45,7 +47,7 @@ class Menu:
         bg_image_label.image = main_menu_bg_image
 
         main_menu_text = f"Welcome back, {self.username}"
-        main_menu_text_label = tk.Label(main_menu_window,text=main_menu_text,font=("Times New Roman",25,"bold"),
+        main_menu_text_label = tk.Label(main_menu_window,text=main_menu_text,font=(font_name,25,"bold"),
                                         foreground="black",justify="center",anchor="n",bg="white")
         main_menu_text_label.place(relx=0,rely=0,x=0,y=2,relwidth=1)
 
@@ -56,13 +58,14 @@ class Menu:
         interval_button_rely = 0.45
         melody_button_rely = 0.45 + vertical_spacing/height
 
+
         interval_button = tk.Button(main_menu_window, text="Play interval gamemode", width=button_width, height=button_height,
-                                    background="white", font=("Times New Roman",12,"bold"), foreground="black",
+                                    background="white", font=(font_name,10,"bold"), foreground="black",
                                     highlightbackground="black",highlightthickness=1,bd=1,
                                     command=self.__interval_gamemode_chosen)
 
         melody_button = tk.Button(main_menu_window, text="Play melody guessing gamemode", width=button_width, height=button_height,
-                                  background="white", font=("Times New Roman",12,"bold"),foreground="black",
+                                  background="white", font=(font_name,10,"bold"),foreground="black",
                                   highlightbackground="black",highlightthickness=1,bd=1,
                                   command=self.__melody_guessing_gamemode_chosen)
 
