@@ -43,6 +43,7 @@ class Key(tk.Button):
         else:
             self.play_key()
         if response == 0 or response == 1:
+            # odpalenie kolejnego pytania automatycznie (do zmiany w ustawieniach - 2. opcja z przyciskiem next_question)
             thread = threading.Thread(target=go_next)
             thread.start()
 

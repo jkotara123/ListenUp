@@ -26,8 +26,9 @@ class Chord:
                 else:
                     key.play_key(color2)
                 sleep(time_gap)
-        thread = threading.Thread(target=play, args=(time_gap,))
-        thread.start()
+        # thread = threading.Thread(target=play, args=(time_gap,)) # nie jestem pewny czy ten thread jest potrzebny
+        # thread.start()
+        play(time_gap)
 
     def random_chord(piano: Piano, **kwargs):
         chord_list = []

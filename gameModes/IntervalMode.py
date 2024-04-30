@@ -17,3 +17,7 @@ class IntervalMode(AbstractMode):
 
     def play_question(self):
         self.interval.play_interval('darkblue', time_gap=self.time_gap)
+
+    def show_question(self):
+        self.interval.play_interval(
+            'darkblue', 'darkgreen', time_gap=self.time_gap)

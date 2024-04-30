@@ -24,32 +24,24 @@ class questionHandler:
         self.gameMode: AbstractMode = gameMode
 
     def next_question(self):
-        if self.question_count == 5:
-            print("Koniec gry!")
-            self.expected.clear()
-        else:
-            self.question_count += 1
-            self.expected = self.gameMode.get_new_question()
-            self.__clear_answer_buff()
-            print("New question!\n")
-            # print(self.expected, self.answer)
-            self.play_question()
+        self.question_count += 1
+        self.expected = self.gameMode.get_new_question()
+        self.__clear_answer_buff()
+        print("New question!\n")
+        self.play_question()
+        print(self.expected, self.answer)
 
     def check_answer(self, key):
-        # print(self.expected,self.anwer)
         if len(self.expected) == 0:
             return 2
         self.answer.append(key)
         if self.answer == self.expected:  # calkowicie poprawna odpowiedz -> klawisz na zielono
             print("Correct!")
             return 1
+        # zla odpowiedz -> klawisz na czerwono
         if key != self.expected[self.answer_index]:
             print("Incorrect!")
             return 0
-        # for ans in self.answer:
-        #     if ans not in self.expected:  # zla odpowiedz -> klawisz na czerwono
-        #         print("Incorrect")
-        #         return 0
         self.answer_index += 1
         return -1  # dobra odpowiedz -> klawisz na zielono
 

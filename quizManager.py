@@ -6,14 +6,15 @@ from gameModes.ChordMode import ChordMode
 
 
 class quizManager:
-    def __init__(self, root, mode=0, octaves=2, lowest_octave=3) -> None:
+    def __init__(self, root, mode=0, time_gap=0.5, octaves=2, lowest_octave=3) -> None:
+        self.handler = questionHandler()
         self.piano = Piano(root, octaves, lowest_octave)
         if mode == 0:
-            self.gameMode: AbstractMode = IntervalMode(self.piano)
+            self.gameMode: AbstractMode = IntervalMode(
+                self.piano, time_gap=time_gap)
         elif mode == 1:
             self.gameMode: AbstractMode = ChordMode(
-                self.piano, time_gap=0.1, major=True, minor=True, major_rev=True, minor_rev=True, major7=True, minor7=True, diminished=True)
-        self.handler = questionHandler()
+                self.piano, time_gap=time_gap, major=True, minor=True, major_rev=True, minor_rev=True, major7=True, minor7=True, diminished=True)
         self.handler.set_mode(self.gameMode)
 
     def play(self):

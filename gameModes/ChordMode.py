@@ -18,3 +18,6 @@ class ChordMode(AbstractMode):
 
     def play_question(self):
         self.chord.play_chord('darkblue', time_gap=self.time_gap)
+
+    def show_question(self):
+        self.chord.play_chord('darkblue', 'darkgreen', time_gap=self.time_gap)
