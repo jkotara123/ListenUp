@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class abstractMode(ABC):
+class AbstractMode(ABC):
     @abstractmethod
     def play_question(self):
         pass

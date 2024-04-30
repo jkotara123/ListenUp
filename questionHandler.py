@@ -1,4 +1,4 @@
-from gameModes.abstractMode import abstractMode
+from gameModes.AbstractMode import AbstractMode
 
 
 class questionHandler:
@@ -13,14 +13,15 @@ class questionHandler:
     def __init__(self) -> None:
         if self.__initialized:
             return
-        self.answer = set()
-        self.expected = set()
-        self.gameMode: abstractMode = None
+        self.answer = []
+        self.answer_index = 0
+        self.expected = []
+        self.gameMode: AbstractMode = None
         self.__initialized = True
         self.question_count = 0
 
-    def set_mode(self, gameMode: abstractMode):
-        self.gameMode: abstractMode = gameMode
+    def set_mode(self, gameMode: AbstractMode):
+        self.gameMode: AbstractMode = gameMode
 
     def next_question(self):
         if self.question_count == 5:
@@ -31,25 +32,30 @@ class questionHandler:
             self.expected = self.gameMode.get_new_question()
             self.__clear_answer_buff()
             print("New question!\n")
-            print(self.expected, self.answer)
+            # print(self.expected, self.answer)
             self.play_question()
 
     def check_answer(self, key):
-        print(self.expected)
+        # print(self.expected,self.anwer)
         if len(self.expected) == 0:
             return 2
-        self.answer.add(key)
+        self.answer.append(key)
         if self.answer == self.expected:  # calkowicie poprawna odpowiedz -> klawisz na zielono
-            print("Correct")
+            print("Correct!")
             return 1
-        for ans in self.answer:
-            if ans not in self.expected:  # zla odpowiedz -> klawisz na czerwono
-                print("Incorrect")
-                return 0
+        if key != self.expected[self.answer_index]:
+            print("Incorrect!")
+            return 0
+        # for ans in self.answer:
+        #     if ans not in self.expected:  # zla odpowiedz -> klawisz na czerwono
+        #         print("Incorrect")
+        #         return 0
+        self.answer_index += 1
         return -1  # dobra odpowiedz -> klawisz na zielono
 
     def play_question(self):
         self.gameMode.play_question()
 
     def __clear_answer_buff(self):
-        self.answer = set()
+        self.answer.clear()
+        self.answer_index = 0

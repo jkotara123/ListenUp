@@ -17,6 +17,7 @@ class Interval:
             self.second.play_key(color2)
         thread = threading.Thread(target=play, args=(time_gap,))
         thread.start()
+        # play(time_gap)
 
     def random_interval(piano: Piano):
         interval = random.randint(-11, 11)

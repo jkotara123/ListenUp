@@ -42,8 +42,9 @@ class Key(tk.Button):
             self.play_key('green')
         else:
             self.play_key()
-        thread = threading.Thread(target=go_next)
-        thread.start()
+        if response == 0 or response == 1:
+            thread = threading.Thread(target=go_next)
+            thread.start()
 
     def play_key(self, color=None, duration=0.5):
         self.play_sound()
