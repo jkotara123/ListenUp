@@ -1,19 +1,19 @@
 class questionHandler:
-    _instance = None
+    # _instance = None
+    #
+    # def __new__(cls):
+    #     if cls._instance is None:
+    #         cls._instance = super().__new__(cls)
+    #         cls._instance.__initialized = False
+    #     return cls._instance
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance.__initialized = False
-        return cls._instance
-
-    def __init__(self) -> None:
-        if self.__initialized:
-            return
+    def __init__(self, game_mode = None) -> None:
+        # if self.__initialized:
+        #     return
         self.answer = set()
         self.expected = set()
-        self.gameMode = None
-        self.__initialized = True
+        self.gameMode = game_mode
+        # self.__initialized = True
         self.question_count = 0
         self.current_quiz_manager = None
 
@@ -29,6 +29,7 @@ class questionHandler:
         self.question_count += 1
         self.expected = self.gameMode.get_new_question()
         self.__clear_answer_buff()
+        #self.current_quiz_manager.update_window_after_new_question()
         print("New question!\n")
         print(self.expected, self.answer)
         # self.play_question()

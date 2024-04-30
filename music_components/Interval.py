@@ -6,9 +6,12 @@ from time import sleep
 
 
 class Interval:
-    def __init__(self, base: int, interval, piano: Piano) -> None:
-        self.base: Key = piano.keys[base]
-        self.second: Key = piano.keys[base+interval]
+    def __init__(self, base: int, interval, piano: Piano = None) -> None:
+        if piano is not None:
+            self.base: Key = piano.keys[base]
+        if piano is not None:
+            self.second: Key = piano.keys[base+interval]
+
 
     def play_interval(self, color1='blue', color2=None, time_gap=0.5):
         def play(time_gap):

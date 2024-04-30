@@ -4,12 +4,12 @@ from music_components.Note import *
 
 
 class Piano:
-    def __init__(self, root, octaves=2, lowest_octave=3):
+    def __init__(self, root, octaves=2, lowest_octave=3, handler = None):
         self.key_num = octaves*12
-        self.keys: list[Key] = self.__createPiano(root, octaves, lowest_octave)
+        self.keys: list[Key] = self.__createPiano(root, octaves, lowest_octave, handler)
 
 
-    def __createPiano (self,root,octaves,lowest_octave):
+    def __createPiano (self,root,octaves,lowest_octave,handler):
         frame_width = root.winfo_width()*0.8
         frame_height = root.winfo_height()*0.25
 
@@ -37,7 +37,7 @@ class Piano:
             white_notes = get_white_notes(octaves, lowest_octave)
             white_keys = []
             for i in range(octaves*white_num):
-                new_key = Key(piano_frame, note=white_notes[i])
+                new_key = Key(piano_frame, note=white_notes[i], handler=handler)
                 new_key.configure(
                     bg='white',
                     command=new_key.clicked
@@ -59,7 +59,7 @@ class Piano:
             name_ix = 0
             for i in range(octaves*white_num-1):
                 if black[i]:
-                    new_key = Key(piano_frame, note=black_notes[name_ix])
+                    new_key = Key(piano_frame, note=black_notes[name_ix], handler=handler)
                     new_key.configure(
                         bg='black',
                         command=new_key.clicked

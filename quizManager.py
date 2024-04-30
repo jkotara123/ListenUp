@@ -1,18 +1,25 @@
 from questionHandler import questionHandler
 from PianoDisabling import PianoDisabler
+from music_components.Piano import Piano
+from gameModes.IntervalMode import IntervalMode
 
 
 max_listens = 3
 
 
 class QuizManager:
-    def __init__ (self,game_mode,piano,gamemode_menu_class):
-        self.piano = piano
-        self.question_handler = questionHandler()
-        self.question_handler.set_mode(game_mode)
+    def __init__ (self,game_mode_prompt,gamemode_menu_class):
+        game_mode = None
+        if game_mode_prompt == "Interval":
+            game_mode = IntervalMode()
+        self.question_handler = questionHandler(game_mode)
+        self.piano = Piano(gamemode_menu_class.get_window(),2,2,self.question_handler)
+        if game_mode is not None:
+            game_mode.set_piano(self.piano)
+        # self.question_handler.set_mode(game_mode)
         self.piano_disabler = PianoDisabler()
         self.piano_disabler.enable_piano()
-        self.piano_disabler.set_piano(piano)
+        self.piano_disabler.set_piano(self.piano)
         self.question_handler.set_current_quiz_manager(self)
         self.current_question = None
         self.gamemode_menu_class = gamemode_menu_class
@@ -60,3 +67,10 @@ class QuizManager:
         print(":(")
         self.piano_disabler.disable_piano()
         self.gamemode_menu_class.answered_incorrectly()
+
+
+    def update_window_after_new_question (self):
+        self.listens = 0
+        self.piano_disabler.enable_piano()
+        self.gamemode_menu_class.next_question_called_external()
+

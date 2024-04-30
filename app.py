@@ -1,6 +1,6 @@
 import tkinter as tk
 import pygame
-from quizManager import QuizManager, quizManager
+from quizManager import QuizManager
 pygame.mixer.init()
 pygame.mixer.set_num_channels(16)
 

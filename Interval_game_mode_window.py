@@ -1,22 +1,19 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-import other_resources
 import threading
 from time import sleep
-from music_components.Piano import Piano
 from quizManager import QuizManager, max_listens
-from gameModes.IntervalMode import IntervalMode
 
 
-fontname = "Calibri"
+fontname = ""
 
 correct_answer_colors = ["green2","green3","green4","darkgreen"]
 incorrect_answer_colors = ["red","red2","red3","red4"]
 
+
 class IntervalGameModeMenu:
     def __init__ (self,launch_immediately=True,octaves=2,lowest_octave=2):
         self.interval_gamemode_menu_window = None
-        self.piano = None
         self.quiz_manager = None
 
         self.play_progress_bar = 0
@@ -36,6 +33,11 @@ class IntervalGameModeMenu:
         self.__prepare_piano(octaves,lowest_octave)
         if launch_immediately:
             self.interval_gamemode_menu_window.mainloop()
+
+
+    def get_window (self):
+        return self.interval_gamemode_menu_window
+
 
     def launch_manually (self):
         self.interval_gamemode_menu_window.mainloop()
@@ -167,6 +169,25 @@ class IntervalGameModeMenu:
                 self.question_pass_label.destroy()
 
 
+    def next_question_called_external (self):
+        play_sound_image = Image.open(f"other_resources/play_sound/play_sound{0}.png")
+        play_sound_image = play_sound_image.resize((240, 60))
+        play_sound_image = ImageTk.PhotoImage(play_sound_image)
+        self.play_image.configure(image=play_sound_image)
+        self.play_image.image = play_sound_image
+        self.play_progress_bar = 0
+        self.interval_gamemode_menu_window.update()
+        # self.quiz_manager.next_question()
+        self.question_counter += 1
+        self.question_counter_label.configure(text=f"Question {self.question_counter}")
+        self.listens_left_label.configure(text=f"Listens left: {max_listens}")
+        self.next_question_button_grey = True
+        self.next_question_button.config(fg="grey")
+        self.interval_gamemode_menu_window.update()
+        if self.question_pass_label is not None:
+            self.question_pass_label.destroy()
+
+
     def __skip_question_clicked (self):
         play_sound_image = Image.open(f"other_resources/play_sound/play_sound{0}.png")
         play_sound_image = play_sound_image.resize((240, 60))
@@ -187,12 +208,21 @@ class IntervalGameModeMenu:
 
 
     def __prepare_piano (self,octaves,lowest_octave):
-        piano_window = self.interval_gamemode_menu_window
-        self.piano = Piano(piano_window,octaves,lowest_octave)
+        # piano_window = self.interval_gamemode_menu_window
+        # self.piano = Piano(piano_window,octaves,lowest_octave)
 
-        game_mode = IntervalMode(self.piano)
+        # game_mode_prompt = IntervalMode(self.piano)
+        game_mode_prompt = "Interval"
+        self.quiz_manager = QuizManager(game_mode_prompt,self)
 
-        self.quiz_manager = QuizManager(game_mode,self.piano,self)
+
+    # def another_question (self):
+    #     self.question_counter += 1
+    #     self.question_counter_label.configure(text=f"Question {self.question_counter}")
+    #     self.listens_left_label.configure(text=f"Listens left: {max_listens}")
+    #     self.next_question_button_grey = True
+    #     self.next_question_button.config(fg="grey")
+    #     self.interval_gamemode_menu_window.update()
 
 
     def __prepare_interval_game_mode_menu (self):
@@ -244,13 +274,13 @@ class IntervalGameModeMenu:
         self.listens_left_label = main_menu_text_label
         main_menu_text_label.place(relx=0.5,rely=0.125,x=0,anchor=tk.CENTER)
 
-        next_question_button = tk.Button(menu_window, text="Next Question", font=(fontname,10,"bold"), foreground="grey",
+        next_question_button = tk.Button(menu_window, text="Next Question", font=(fontname,10), foreground="grey",
                                   highlightbackground="grey",highlightthickness=1,bd=1,background="white",
                                   width=button_width, height=button_height,
                                   command=self.__next_question_clicked)
         self.next_question_button = next_question_button
 
-        skip_question_button = tk.Button(menu_window, text="Skip Question", font=(fontname,10,"bold"), foreground="black",
+        skip_question_button = tk.Button(menu_window, text="Skip Question", font=(fontname,10), foreground="black",
                                          highlightbackground="black",highlightthickness=1,bd=1,background="white",
                                          width=button_width,height=button_height,
                                          command=self.__skip_question_clicked)

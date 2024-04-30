@@ -12,12 +12,13 @@ blue = ["RoyalBlue1","RoyalBlue2","RoyalBlue3","blue2","blue4","navy"]
 
 
 class Key(tk.Button):
-    def __init__(self, master, note: Note, **kwargs):
+    def __init__(self, master, note: Note, handler, **kwargs):
         super().__init__(master=master, **kwargs)
         self.note: Note = note
         self.is_black: bool = 'b' in self.note.name
-        self.handler: questionHandler = questionHandler()
+        # self.handler: questionHandler = questionHandler()
         self.piano_disabler = PianoDisabler()
+        self.handler = handler
 
     def __str__(self) -> str:
         return self.note
@@ -30,7 +31,10 @@ class Key(tk.Button):
 
     def __change_color(self, color, duration=0.5):
         def change(color, duration):
-            base_color = self['background']
+            # base_color = self['background']
+            base_color = "white"
+            if self.is_black:
+                base_color = "black"
             # self.configure(bg=color)
             # sleep(duration)
             # self.configure(bg=base_color)
@@ -55,12 +59,15 @@ class Key(tk.Button):
         thread.start()
 
     def clicked(self):
+        handler = self.handler
         def go_next():  # jak odpalic tylko jeden watek z pytaniem jednoczesnie
             sleep(2)
             # self.handler.next_question()
+            handler.next_question()
+            handler.current_quiz_manager.update_window_after_new_question()
 
         if self.piano_disabler.is_enabled():
-            response = self.handler.check_answer(self)
+            response = handler.check_answer(self)
             if response == 0:
                 self.play_key('red')
             elif response != 2:
