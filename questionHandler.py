@@ -1,3 +1,6 @@
+from gameModes.AbstractMode import AbstractMode
+
+
 class questionHandler:
     # _instance = None
     #
@@ -10,16 +13,17 @@ class questionHandler:
     def __init__(self, game_mode = None) -> None:
         # if self.__initialized:
         #     return
-        self.answer = set()
-        self.expected = set()
+        self.answer = []
+        self.answer_index = 0
+        self.expected = []
         self.gameMode = game_mode
         # self.__initialized = True
         self.question_count = 0
         self.current_quiz_manager = None
         self.currently_active = True
 
-    def set_mode(self, gameMode):
-        self.gameMode = gameMode
+    def set_mode(self, gameMode: AbstractMode):
+        self.gameMode: AbstractMode = gameMode
 
 
     def temporarily_deactivate (self):
@@ -52,25 +56,27 @@ class questionHandler:
         return 1
 
     def check_answer(self, key):
-        print(self.expected)
         if len(self.expected) == 0:
             return 2
-        self.answer.add(key)
+        self.answer.append(key)
         if self.answer == self.expected:  # calkowicie poprawna odpowiedz -> klawisz na zielono
-            print("Correct")
+            print("Correct!")
             if self.current_quiz_manager is not None:
                 self.current_quiz_manager.question_passed()
             return 1
-        for ans in self.answer:
-            if ans not in self.expected:  # zla odpowiedz -> klawisz na czerwono
-                print("Incorrect")
-                if self.current_quiz_manager is not None:
-                    self.current_quiz_manager.question_failed()
-                return 0
+        # zla odpowiedz -> klawisz na czerwono
+        if key != self.expected[self.answer_index]:
+            print("Incorrect!")
+            if self.current_quiz_manager is not None:
+                self.current_quiz_manager.question_failed()
+            return 0
+        self.answer_index += 1
+
         return -1  # dobra odpowiedz -> klawisz na zielono
 
     def play_question(self):
         self.gameMode.play_question()
 
     def __clear_answer_buff(self):
-        self.answer = set()
+        self.answer.clear()
+        self.answer_index = 0

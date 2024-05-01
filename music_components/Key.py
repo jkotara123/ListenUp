@@ -60,6 +60,7 @@ class Key(tk.Button):
         handler = self.handler
         def go_next():  # jak odpalic tylko jeden watek z pytaniem jednoczesnie
             sleep(2)
+
             # self.handler.next_question()
             # handler.next_question()
             # handler.current_quiz_manager.update_window_after_new_question()
