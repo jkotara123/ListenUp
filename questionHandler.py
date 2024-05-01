@@ -1,4 +1,4 @@
-from gameModes.AbstractMode import AbstractMode
+from gameModes.abstractMode import AbstractMode
 
 
 class questionHandler:

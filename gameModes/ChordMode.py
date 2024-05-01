@@ -1,6 +1,6 @@
 from music_components.Chord import Chord
 from music_components.Piano import Piano
-from gameModes.AbstractMode import AbstractMode
+from gameModes.abstractMode import AbstractMode
 
 
 class ChordMode(AbstractMode):

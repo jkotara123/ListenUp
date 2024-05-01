@@ -1,6 +1,6 @@
 from music_components.Interval import Interval
 from music_components.Piano import Piano
-from gameModes.AbstractMode import AbstractMode
+from gameModes.abstractMode import AbstractMode
 
 
 class IntervalMode(AbstractMode):

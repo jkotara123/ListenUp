@@ -15,7 +15,6 @@ class Key(tk.Button):
         super().__init__(master=master, **kwargs)
         self.note: Note = note
         self.is_black: bool = 'b' in self.note.name
-        # self.handler: questionHandler = questionHandler()
         self.handler = handler
 
     def __str__(self) -> str:
@@ -58,12 +57,13 @@ class Key(tk.Button):
 
     def clicked(self):
         handler = self.handler
+
         def go_next():  # jak odpalic tylko jeden watek z pytaniem jednoczesnie
             sleep(2)
 
-            # self.handler.next_question()
-            # handler.next_question()
-            # handler.current_quiz_manager.update_window_after_new_question()
+            # handler.next_question() # uncomment this line if running app.py
+            # if handler.current_quiz_manager is not None:
+            #     handler.current_quiz_manager.update_window_after_new_question()
 
         if self.handler.is_active():
             response = handler.check_answer(self)

@@ -1,14 +1,14 @@
 from questionHandler import questionHandler
 from music_components.Piano import Piano
 from gameModes.IntervalMode import IntervalMode
-from gameModes.AbstractMode import AbstractMode
+from gameModes.abstractMode import AbstractMode
 from gameModes.ChordMode import ChordMode
 
 
 class quizManager: # for gamemode showcase
     def __init__(self, root, mode=0, time_gap=0.5, octaves=2, lowest_octave=3) -> None:
         self.handler = questionHandler()
-        self.piano = Piano(root, octaves, lowest_octave)
+        self.piano = Piano(root, octaves, lowest_octave, handler=self.handler)
         if mode == 0:
             self.gameMode: AbstractMode = IntervalMode(
                 self.piano, time_gap=time_gap)
@@ -19,6 +19,7 @@ class quizManager: # for gamemode showcase
 
     def play(self):
         self.handler.next_question()
+
 
 max_listens = 3
 

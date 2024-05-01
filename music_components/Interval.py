@@ -16,7 +16,7 @@ class Interval:
     def play_interval(self, color1='blue', color2=None, time_gap=0.5):
         def play(time_gap):
             self.base.play_key(color1, 3)
-            sleep(time_gap)
+            # sleep(time_gap) # uncomment the line if running app.py, keep it as a comment if running MainMenu.py
             self.second.play_key(color2)
         # thread = threading.Thread(target=play, args=(time_gap,))      # nie jestem pewny czy ten thread jest potrzebny
         # thread.start()

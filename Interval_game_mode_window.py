@@ -177,7 +177,6 @@ class IntervalGameModeMenu:
         self.play_image.image = play_sound_image
         self.play_progress_bar = 0
         self.interval_gamemode_menu_window.update()
-        # self.quiz_manager.next_question()
         self.question_counter += 1
         self.question_counter_label.configure(text=f"Question {self.question_counter}")
         self.listens_left_label.configure(text=f"Listens left: {max_listens}")
@@ -208,21 +207,17 @@ class IntervalGameModeMenu:
 
 
     def __prepare_piano (self,octaves,lowest_octave):
-        # piano_window = self.interval_gamemode_menu_window
-        # self.piano = Piano(piano_window,octaves,lowest_octave)
-
-        # game_mode_prompt = IntervalMode(self.piano)
         game_mode_prompt = "Interval"
         self.quiz_manager = QuizManager(game_mode_prompt,self)
 
 
-    # def another_question (self):
-    #     self.question_counter += 1
-    #     self.question_counter_label.configure(text=f"Question {self.question_counter}")
-    #     self.listens_left_label.configure(text=f"Listens left: {max_listens}")
-    #     self.next_question_button_grey = True
-    #     self.next_question_button.config(fg="grey")
-    #     self.interval_gamemode_menu_window.update()
+    def another_question (self):
+        self.question_counter += 1
+        self.question_counter_label.configure(text=f"Question {self.question_counter}")
+        self.listens_left_label.configure(text=f"Listens left: {max_listens}")
+        self.next_question_button_grey = True
+        self.next_question_button.config(fg="grey")
+        self.interval_gamemode_menu_window.update()
 
 
     def __prepare_interval_game_mode_menu (self):
@@ -268,7 +263,6 @@ class IntervalGameModeMenu:
         main_menu_text_label.place(relx=0,rely=0,x=0,y=2,relwidth=1)
 
         relistens_left_text = f"Listens left: {max_listens}"
-        # relistens_left_text = f"Relistens left: {3}"
         main_menu_text_label = tk.Label(menu_window,text=relistens_left_text,font=(fontname,14,"bold"),
                                         foreground="black",justify="center",anchor="n",bg="white")
         self.listens_left_label = main_menu_text_label
@@ -287,7 +281,6 @@ class IntervalGameModeMenu:
 
         next_question_button.place(relx=0.5,anchor=tk.CENTER,rely=0.325)
         skip_question_button.place(relx=0.5,anchor=tk.CENTER,rely=0.325+(vertical_spacing/height))
-        # skip_question_button.place(relx=0.5, anchor=tk.CENTER, rely=0.325)
 
         correct_ans_label = tk.Label(menu_window, text=f"{self.correct_ans_counter}", font=(fontname,16,"bold"), background="white")
         correct_ans_label.config(fg="green2")
