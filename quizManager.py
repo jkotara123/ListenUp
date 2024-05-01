@@ -1,5 +1,4 @@
 from questionHandler import questionHandler
-from PianoDisabling import PianoDisabler
 from music_components.Piano import Piano
 from gameModes.IntervalMode import IntervalMode
 
@@ -17,9 +16,6 @@ class QuizManager:
         if game_mode is not None:
             game_mode.set_piano(self.piano)
         # self.question_handler.set_mode(game_mode)
-        self.piano_disabler = PianoDisabler()
-        self.piano_disabler.enable_piano()
-        self.piano_disabler.set_piano(self.piano)
         self.question_handler.set_current_quiz_manager(self)
         self.current_question = None
         self.gamemode_menu_class = gamemode_menu_class
@@ -45,7 +41,7 @@ class QuizManager:
 
     def next_question (self):
         self.listens = 0
-        self.piano_disabler.enable_piano()
+        self.question_handler.activate()
         self.question_handler.next_question()
 
 
@@ -59,18 +55,18 @@ class QuizManager:
 
     def question_passed (self):
         print(":)")
-        self.piano_disabler.disable_piano()
+        self.question_handler.temporarily_deactivate()
         self.gamemode_menu_class.answered_correctly()
 
 
     def question_failed (self):
         print(":(")
-        self.piano_disabler.disable_piano()
+        self.question_handler.temporarily_deactivate()
         self.gamemode_menu_class.answered_incorrectly()
 
 
     def update_window_after_new_question (self):
         self.listens = 0
-        self.piano_disabler.enable_piano()
+        self.question_handler.activate()
         self.gamemode_menu_class.next_question_called_external()
 

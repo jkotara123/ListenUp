@@ -1,6 +1,5 @@
 from music_components.Note import Note
 from questionHandler import questionHandler
-from PianoDisabling import PianoDisabler
 import tkinter as tk
 import threading
 from time import sleep
@@ -17,7 +16,6 @@ class Key(tk.Button):
         self.note: Note = note
         self.is_black: bool = 'b' in self.note.name
         # self.handler: questionHandler = questionHandler()
-        self.piano_disabler = PianoDisabler()
         self.handler = handler
 
     def __str__(self) -> str:
@@ -63,10 +61,10 @@ class Key(tk.Button):
         def go_next():  # jak odpalic tylko jeden watek z pytaniem jednoczesnie
             sleep(2)
             # self.handler.next_question()
-            handler.next_question()
-            handler.current_quiz_manager.update_window_after_new_question()
+            # handler.next_question()
+            # handler.current_quiz_manager.update_window_after_new_question()
 
-        if self.piano_disabler.is_enabled():
+        if self.handler.is_active():
             response = handler.check_answer(self)
             if response == 0:
                 self.play_key('red')

@@ -16,9 +16,22 @@ class questionHandler:
         # self.__initialized = True
         self.question_count = 0
         self.current_quiz_manager = None
+        self.currently_active = True
 
     def set_mode(self, gameMode):
         self.gameMode = gameMode
+
+
+    def temporarily_deactivate (self):
+        self.currently_active= False
+
+
+    def activate (self):
+        self.currently_active = True
+
+
+    def is_active (self):
+        return self.currently_active
 
 
     def set_current_quiz_manager (self,quiz_manager):
