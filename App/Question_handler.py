@@ -1,14 +1,14 @@
-from App.Game_Modes.Interval import Interval
-from App.Game_Modes.Chord import Chord
+from Game_Modes.Interval import Interval
+from Game_Modes.Chord import Chord
 
 modes = {"Interval": Interval, "Chord": Chord}
 
 
 class QuestionHandler:
-    def __init__(self, prompt, octaves, lowest_octave, chord_set=None):
+    def __init__(self, prompt, octaves, lowest_octave, game_mode_specs):
         self.octaves = octaves
         self.lowest_octave = lowest_octave
-        self.chord_set = chord_set
+        self.game_mode_specs = game_mode_specs
         self.prompt = prompt
         self.question = None
         self.index = 0
@@ -16,12 +16,10 @@ class QuestionHandler:
     def create_new_question(self):
         if self.prompt == "Chord":
             self.question = modes[self.prompt](
-                self.octaves, self.lowest_octave, create_random=True, major="major" in self.chord_set,
-                major7="major7" in self.chord_set, major_rev="major_rev" in self.chord_set, minor7="minor7" in self.chord_set,
-                minor="minor" in self.chord_set, minor_rev="minor_rev" in self.chord_set, diminished="diminished" in self.chord_set)
+                self.octaves, self.lowest_octave, self.game_mode_specs)
         else:
             self.question = modes[self.prompt](
-                self.octaves, self.lowest_octave, create_random=True)
+                self.octaves, self.lowest_octave, self.game_mode_specs)
         print(self.question.get_sequence())
         self.index = 0
 
@@ -44,7 +42,6 @@ class QuestionHandler:
         return self.index+1 == self.question.size()
 
     def check_answer(self, note_name):
-        # print(self.get_expected(), self.index)
         if self.get_expected() == note_name:
             self.index += 1
             if self.index < self.question.size():

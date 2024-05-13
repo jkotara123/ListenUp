@@ -37,7 +37,7 @@ class Interval(Quizable):
             self.sound_sequence = create_notes(
                 octaves, lowest_octave, interval, first)
             self.name = interval
-        if random.randint(0, 3) == 0:
+        if random.randint(0, 2) == 0:
             self.sound_sequence.reverse()
         self.to_show = [0]
         self.expected = [1]

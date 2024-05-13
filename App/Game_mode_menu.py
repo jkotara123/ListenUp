@@ -53,7 +53,7 @@ class GameModeMenu:
 
         self.__prepare_menu(root, octaves)
         self.__prepare_piano(root, octaves, lowest_octave)
-        self.__prepare_quiz_manager(game_mode_prompt, game_mode_specs)
+        self.__prepare_quiz_manager(game_mode_prompt)
         if launch_immediately:
             self.menu_frame.winfo_toplevel().mainloop()
 
@@ -88,11 +88,11 @@ class GameModeMenu:
                 self.listens_left_label.configure(
                     text=f"You cannot listen listen to the question anymore")
             elif self.listens_left == 1:
-                self.listens_left_label.configure(text=f"You can listen to the question {
-                                                  self.listens_left} more time")
+                self.listens_left_label.configure(
+                    text=f"You can listen to the question {self.listens_left} more time")
             else:
-                self.listens_left_label.configure(text=f"You can listen to the question {
-                                                  self.listens_left} more times")
+                self.listens_left_label.configure(
+                    text=f"You can listen to the question {self.listens_left} more times")
 
             for i in range(1, listening_steps+1):
                 play_image = Image.open(
@@ -185,8 +185,8 @@ class GameModeMenu:
                 text_color="grey", hover_color="white", border_color="grey")
             self.show_answer_button.configure(
                 text_color="grey", hover_color="white", border_color="grey")
-            self.listens_left_label.configure(text=f"You can listen the question {
-                                              self.listens_left} more times")
+            self.listens_left_label.configure(
+                text=f"You can listen the question {self.listens_left} more times")
             self.question_counter_label.configure(
                 text=f"Question {self.question_counter}")
             self.quiz_manager_comm_channel.create_new_question()

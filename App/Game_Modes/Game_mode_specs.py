@@ -86,6 +86,7 @@ class Game_mode_specs():
             command=all_command)
 
         all_button.grid(row=0, column=0, columnspan=3, pady=10)
+
         return panel
 
     def chord_setting_menu(self, root):
@@ -144,11 +145,8 @@ class Game_mode_specs():
                           pady=5, columnspan=2, sticky="ns")
         return panel
 
-
-root = ctk.CTk()
-root.geometry('700x450')
-a = Game_mode_specs()
-select_menu = a.chord_setting_menu(root)
-select_menu.pack(pady=20)
-
-root.mainloop()
+    def create_setting_menu(self, root):
+        if self.prompt == "Chord":
+            return self.chord_setting_menu(root)
+        elif self.prompt == "Interval":
+            return self.interval_setting_menu(root)
