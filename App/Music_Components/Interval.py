@@ -10,6 +10,7 @@ class Interval(Quizable):
         if create_random:
             first = create_random_note(octaves, lowest_octave)
             second = create_random_note(octaves, lowest_octave, first, 11)
+            # third = create_random(octaves, notes, second , 5)
 
         self.sound_sequence.append(first)
         self.sound_sequence.append(second)
@@ -36,3 +37,6 @@ class Interval(Quizable):
 
     def size(self):
         return 1
+      
+    def get (self, i):  # zwraca i-ty element sekwencji
+        return self.sound_sequence[i]
