@@ -46,4 +46,3 @@ def create_notes(octaves, lowest_octave, intervals, base_note=None):
         rand_note_names.append(
             note_names[(base_note+interval) % 12]+str((base_note+interval)//12+lowest_octave))
     return rand_note_names
-

@@ -30,7 +30,7 @@ listening_steps = 10
 
 
 class GameModeMenu:
-    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, chord_set=None):
+    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, game_mode_specs=None):
         self.menu_frame = None
         self.piano = None
         self.quiz_manager_comm_channel = None
@@ -49,24 +49,19 @@ class GameModeMenu:
         self.listening_in_progress = False
         self.answer_given = False
 
+        self.game_mode_specs = game_mode_specs  # nie wiem czy potrzebny
+
         self.__prepare_menu(root, octaves)
         self.__prepare_piano(root, octaves, lowest_octave)
-        self.__prepare_quiz_manager(game_mode_prompt, chord_set)
+        self.__prepare_quiz_manager(game_mode_prompt)
         if launch_immediately:
             self.menu_frame.winfo_toplevel().mainloop()
 
-    def __prepare_quiz_manager(self, game_mode_prompt, chord_set=None):
-        if game_mode_prompt is not None:
-            if game_mode_prompt == "Interval":
-                self.quiz_manager_comm_channel = CommunicationChannel()
-                self.quiz_manager_comm_channel.set_menu(self)
-                self.quiz_manager_comm_channel.create_quiz_manager(
-                    "Interval", self.piano, max_listens)
-            elif game_mode_prompt == "Chord":
-                self.quiz_manager_comm_channel = CommunicationChannel()
-                self.quiz_manager_comm_channel.set_menu(self)
-                self.quiz_manager_comm_channel.create_quiz_manager(
-                    "Chord", self.piano, max_listens, chord_set)
+    def __prepare_quiz_manager(self, game_mode_prompt):
+        self.quiz_manager_comm_channel = CommunicationChannel()
+        self.quiz_manager_comm_channel.set_menu(self)
+        self.quiz_manager_comm_channel.create_quiz_manager(
+            game_mode_prompt, self.piano, max_listens, self.game_mode_specs)
 
     def __prepare_piano(self, root, octaves, lowest_octave):
         self.piano = Piano(root, octaves=octaves, lowest_octave=lowest_octave)
@@ -93,11 +88,11 @@ class GameModeMenu:
                 self.listens_left_label.configure(
                     text=f"You cannot listen listen to the question anymore")
             elif self.listens_left == 1:
-                self.listens_left_label.configure(text=f"You can listen to the question {
-                                                  self.listens_left} more time")
+                self.listens_left_label.configure(
+                    text=f"You can listen to the question {self.listens_left} more time")
             else:
-                self.listens_left_label.configure(text=f"You can listen to the question {
-                                                  self.listens_left} more times")
+                self.listens_left_label.configure(
+                    text=f"You can listen to the question {self.listens_left} more times")
 
             for i in range(1, listening_steps+1):
                 play_image = Image.open(
@@ -190,8 +185,8 @@ class GameModeMenu:
                 text_color="grey", hover_color="white", border_color="grey")
             self.show_answer_button.configure(
                 text_color="grey", hover_color="white", border_color="grey")
-            self.listens_left_label.configure(text=f"You can listen the question {
-                                              self.listens_left} more times")
+            self.listens_left_label.configure(
+                text=f"You can listen the question {self.listens_left} more times")
             self.question_counter_label.configure(
                 text=f"Question {self.question_counter}")
             self.quiz_manager_comm_channel.create_new_question()
