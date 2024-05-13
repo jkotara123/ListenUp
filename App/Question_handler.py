@@ -1,5 +1,5 @@
-from Music_Components.Interval import Interval
-from Music_Components.Chord import Chord
+from App.Game_Modes.Interval import Interval
+from App.Game_Modes.Chord import Chord
 
 modes = {"Interval": Interval, "Chord": Chord}
 

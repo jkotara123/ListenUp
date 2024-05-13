@@ -1,10 +1,10 @@
 class Game_mode_specs():
-    def __init__(self, prompt, number_of_notes_to_show=1):
+    def __init__(self, prompt=None, number_of_notes_to_show=1):
         self.prompt = prompt
         self._selected_types = set()
         self._number_of_notes_to_show = number_of_notes_to_show
 
-    def change_prompt(self, new_prompt):
+    def set_prompt(self, new_prompt):
         self.prompt = new_prompt
         self.reset()
 
