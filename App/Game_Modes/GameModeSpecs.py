@@ -9,7 +9,7 @@ interval_names = ["Unison", "Minor second", "Major second", "Minor third", "Majo
                   "Tritone", "Perfect fifth", "Minor sixth", "Major sixth", "Minor seventh", "Major seventh", "Octave"]
 
 
-class Game_mode_specs():
+class GameModeSpecs:
     def __init__(self, prompt=None, number_of_notes_to_show=1):
         self.prompt = prompt
         self._selected_types = set()
@@ -59,7 +59,7 @@ class Game_mode_specs():
                 self.remove(interval_names[i])
                 all_button.deselect()
 
-        panel = ctk.CTkFrame(root)
+        panel = ctk.CTkFrame(master=root, fg_color="white")
         num_rows = [4, 5, 4]
         index = 0
         interval_checkboxes = []
@@ -67,7 +67,7 @@ class Game_mode_specs():
         for col, rows in enumerate(num_rows):
             for row in range(rows):
                 checkbox = ctk.CTkCheckBox(
-                    panel, text=interval_names[index],
+                    master=panel, text=interval_names[index],
                     onvalue="on", offvalue="off",
                     command=lambda i=index: interval_command(i),
                     checkbox_width=25,
@@ -80,13 +80,14 @@ class Game_mode_specs():
                 index += 1
 
         all_button = ctk.CTkCheckBox(
-            panel, text="All", width=50,
+            master=panel, text="All", width=50,
             checkbox_height=25, checkbox_width=25,
             onvalue="on", offvalue="off",
             command=all_command)
 
         all_button.grid(row=0, column=0, columnspan=3, pady=10)
 
+        # panel.place(relx=0.5, rely=0.65)
         return panel
 
     def chord_setting_menu(self, root):
@@ -115,14 +116,14 @@ class Game_mode_specs():
                 for i in rng:
                     checkboxes[i].toggle()
 
-        panel = ctk.CTkFrame(root)
+        panel = ctk.CTkFrame(master=root, fg_color="white")
         num_rows = [3, 2, 3, 2]
         index = 0
         checkboxes = []
         for col, rows in enumerate(num_rows):
             for row in range(rows):
                 checkbox = ctk.CTkCheckBox(
-                    panel, text=chord_names[index],
+                    master=panel, text=chord_names[index],
                     onvalue="on", offvalue="off",
                     command=lambda i=index: chord_command(i)
                 )
@@ -131,18 +132,19 @@ class Game_mode_specs():
                 checkboxes.append(checkbox)
                 index += 1
         major_button = ctk.CTkCheckBox(
-            panel, text="All major",
+            master=panel, text="All major",
             onvalue="on", offvalue="off",
             command=lambda mode="major": major_command(mode))
         major_button.grid(row=1, column=0,
                           pady=5, columnspan=2, sticky="ns")
 
         minor_button = ctk.CTkCheckBox(
-            panel, text="All minor",
+            master=panel, text="All minor",
             onvalue="on", offvalue="off",
             command=lambda mode="minor": major_command(mode))
         minor_button.grid(row=1, column=2,
                           pady=5, columnspan=2, sticky="ns")
+        # panel.place(relx=0.5, rely=0.65)
         return panel
 
     def create_setting_menu(self, root):

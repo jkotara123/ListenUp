@@ -1,10 +1,10 @@
 import random
 from .Creating_random_note import create_notes
-from .Quizable import Quizable
-from .Game_mode_specs import Game_mode_specs
+from .Quizzable import Quizzable
+from .GameModeSpecs import GameModeSpecs
 
 
-class Chord(Quizable):
+class Chord(Quizzable):
     chord_types = {
         "Major root": [0, 4, 7],
         "Major 1st inv.": [0, 3, 8],
@@ -18,7 +18,7 @@ class Chord(Quizable):
         "Diminished": [0, 3, 6, 9]
     }
 
-    def __init__(self, octaves, lowest_octave, specs: Game_mode_specs, intervals: list[int] = None, base: str = None, time_gaps=None,  notes_to_show=[0]) -> None:
+    def __init__(self, octaves, lowest_octave, specs: GameModeSpecs, intervals: list[int] = None, base: str = None, time_gaps=None, notes_to_show=[0]) -> None:
         self.sound_sequence = []
         self.base_note = base
         self.intervals = intervals

@@ -1,10 +1,10 @@
-from .Quizable import Quizable
-from .Game_mode_specs import Game_mode_specs
+from .Quizzable import Quizzable
+from .GameModeSpecs import GameModeSpecs
 from .Creating_random_note import create_notes
 import random
 
 
-class Interval(Quizable):
+class Interval(Quizzable):
     interval_types = {
         "Unison": [0, 0],
         "Minor second": [0, 1],
@@ -21,7 +21,7 @@ class Interval(Quizable):
         "Octave": [0, 12]
     }
 
-    def __init__(self, octaves, lowest_octave, specs: Game_mode_specs, first=None, second=None, time_gaps=[0.6]):
+    def __init__(self, octaves, lowest_octave, specs: GameModeSpecs, first=None, second=None, time_gaps=[0.6]):
         if first != None and second != None:
             self.sound_sequence = [first, second]
             self.name = "?>?"

@@ -1,7 +1,7 @@
 import abc
 
 
-class Quizable(abc.ABC):
+class Quizzable(abc.ABC):
     @abc.abstractmethod
     def get_time_gaps(self):
         pass
