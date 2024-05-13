@@ -33,4 +33,3 @@ def create_random_note (octaves, lowest_octave, base=None, span=None):
         random_note_name = random_name+str(random_octave)
 
     return random_note_name
-

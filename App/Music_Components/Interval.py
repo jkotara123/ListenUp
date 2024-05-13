@@ -8,6 +8,7 @@ class Interval:
         if create_random:
             first = create_random_note(octaves, lowest_octave)
             second = create_random_note(octaves, lowest_octave, first, 11)
+            # third = create_random(octaves, notes, second , 5)
 
         self.sound_sequence.append(first)
         self.sound_sequence.append(second)
@@ -20,21 +21,21 @@ class Interval:
         self.time_gaps = time_gaps
 
 
-    def get_time_gaps (self):
+    def get_time_gaps (self):  # ! liste floatów o jeden mniej dźwięk
         return self.time_gaps
 
 
-    def get_to_show (self):
+    def get_to_show (self):  # ! indeksy nutek ktore maja sie swiecic na niebisko
         return [0]
 
 
-    def get (self, i):
+    def get (self, i):  # zwraca i-ty element sekwencji
         return self.sound_sequence[i]
 
 
-    def get_sequence (self):
+    def get_sequence (self):  # zwraca cala liste jako liste
         return self.sound_sequence
 
 
-    def size (self):
+    def size (self):  # zwraca rozmiar listy
         return len(self.sound_sequence)
