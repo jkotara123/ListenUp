@@ -1,4 +1,3 @@
-from time import sleep
 from .Quizable import Quizable
 from .Game_mode_specs import Game_mode_specs
 from .Creating_random_note import create_notes
@@ -6,20 +5,42 @@ import random
 
 
 class Interval(Quizable):
-    def __init__(self, octaves, lowest_octave, specs: Game_mode_specs, first=None, second=None, time_gaps=[0.6]):
+    interval_types = {
+        "Unison": [0, 0],
+        "Minor second": [0, 1],
+        "Major second": [0, 2],
+        "Minor third": [0, 3],
+        "Major third": [0, 4],
+        "Perfect fourth": [0, 5],
+        "Tritone": [0, 6],
+        "Perfect fifth": [0, 7],
+        "Minor sixth": [0, 8],
+        "Major sixth": [0, 9],
+        "Minor seventh": [0, 10],
+        "Major seventh": [0, 11],
+        "Octave": [0, 12]
+    }
 
+    def __init__(self, octaves, lowest_octave, specs: Game_mode_specs, first=None, second=None, time_gaps=[0.6]):
         if first != None and second != None:
             self.sound_sequence = [first, second]
+            self.name = "?>?"
         else:
-            interval = random.choice(specs.get_types())
+            interval_list = []
+            if specs.is_empty():
+                raise ValueError("At least one interval must be selected.")
+            for interval in specs.get_types():
+                x = Interval.interval_types.get(interval)
+                if x != None:
+                    interval_list.append(x)
+            interval = random.choice(interval_list)
             self.sound_sequence = create_notes(
                 octaves, lowest_octave, interval, first)
-        if random.randint(0, 2) > 0:
-            self.to_show = [0]
-            self.expected = [1]
-        else:
-            self.to_show = [1]
-            self.expected = [0]
+            self.name = interval
+        if random.randint(0, 3) == 0:
+            self.sound_sequence.reverse()
+        self.to_show = [0]
+        self.expected = [1]
 
         self.time_gaps = time_gaps
 

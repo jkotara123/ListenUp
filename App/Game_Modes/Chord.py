@@ -6,13 +6,16 @@ from .Game_mode_specs import Game_mode_specs
 
 class Chord(Quizable):
     chord_types = {
-        "Major": [[0, 4, 7]],
-        "Major_rev": [[0, 3, 8], [0, 5, 9]],
-        "Minor": [[0, 3, 7]],
-        "Minor_rev": [[0, 4, 9], [0, 5, 8]],
-        "Major7": [[0, 4, 7, 10], [0, 4, 7, 11]],
-        "Minor7": [[0, 3, 7, 10]],
-        "Diminished": [[0, 3, 6, 9]]
+        "Major root": [0, 4, 7],
+        "Major 1st inv.": [0, 3, 8],
+        "Major 2nd inv.": [0, 5, 9],
+        "Dominant 7th": [0, 4, 7, 10],
+        "Maj7": [0, 4, 7, 11],
+        "Minor": [0, 3, 7],
+        "Minor 1st inv.": [0, 4, 9],
+        "Minor 2nd inv.": [0, 5, 8],
+        "Minor7": [0, 3, 7, 10],
+        "Diminished": [0, 3, 6, 9]
     }
 
     def __init__(self, octaves, lowest_octave, specs: Game_mode_specs, intervals: list[int] = None, base: str = None, time_gaps=None,  notes_to_show=[0]) -> None:
@@ -29,8 +32,9 @@ class Chord(Quizable):
             if specs.is_empty():
                 raise ValueError("At least one chord type must be selected.")
             for type in specs.get_types():
-                chord_list += Chord.chord_types[type]
-
+                x = Chord.chord_types.get(type)
+                if x != None:
+                    chord_list.append(x)
             self.intervals = random.choice(chord_list)
             self.sound_sequence = create_notes(
                 octaves, lowest_octave, self.intervals)
