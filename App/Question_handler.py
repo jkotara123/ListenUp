@@ -15,7 +15,7 @@ class QuestionHandler:
     def create_new_question(self):
         if self.prompt == "Chord":
             self.question = modes[self.prompt](
-                self.octaves, self.lowest_octave, create_random=True, major=True, major=True, major_rev=True, minor=True, minor=True, minor_rev=True, diminished=True)
+                self.octaves, self.lowest_octave, create_random=True, major=True, major7=True, major_rev=True, minor7=True, minor=True, minor_rev=True, diminished=True)
         else:
             self.question = modes[self.prompt](
                 self.octaves, self.lowest_octave, create_random=True)
