@@ -25,19 +25,33 @@ def set_root_specs(root, width, height):
 class IntroductoryQuizMenu:
     def __init__(self, root=None, launch_immediately=True):
         self.menu_frame = root
+        self.prompts_for_chord_mode = set()
         self.__prepare_menu(root)
         if launch_immediately:
             self.menu_frame.winfo_toplevel().mainloop()
 
+
     def __start_quiz(self, prompt):
         self.menu_frame.pack_forget()
-        game_modes[prompt](launch_immediately=True,
-                           root=self.menu_frame.winfo_toplevel())
+        if prompt == "Chord":
+            game_modes[prompt](launch_immediately=True,
+                               root=self.menu_frame.winfo_toplevel(), chord_set=self.prompts_for_chord_mode)
+        else:
+            game_modes[prompt](launch_immediately=True,
+                               root=self.menu_frame.winfo_toplevel())
         self.menu_frame.place(x=0, y=0, relx=1, rely=1)
 
     def launch_manually(self):
         if self.menu_frame.winfo_toplevel() is not None:
             self.menu_frame.winfo_toplevel().mainloop()
+
+    def __update_chord_prompts (self, prompt):
+        if prompt not in self.prompts_for_chord_mode:
+            self.prompts_for_chord_mode.add(prompt)
+        else:
+            self.prompts_for_chord_mode.remove(prompt)
+        print(self.prompts_for_chord_mode)
+
 
     def __prepare_menu(self, root):
         width = 600
@@ -69,8 +83,18 @@ class IntroductoryQuizMenu:
             quiz_button = ctk.CTkButton(master=quiz_mode_sel_frame, text=f"Play {lower_prompt} quiz", corner_radius=8,
                                         fg_color="white", hover_color="grey", text_color="black", bg_color="white",
                                         border_width=2, border_color="black", font=(fontname, 14),
-                                        command=lambda: self.__start_quiz(prompt))
+                                        command=lambda prompt_=prompt: self.__start_quiz(prompt_))
             quiz_button.pack(anchor="n", expand=True, padx=10, pady=10)
+
+        chord_prompts = ["minor", "major", "minor7", "major7", "diminished", "major_rev", "minor_rev"]
+        for prompt in chord_prompts:
+            lower_prompt = prompt.lower()
+            quiz_button = ctk.CTkButton(master=quiz_mode_sel_frame, text=f"{lower_prompt} quiz", corner_radius=8,
+                                        fg_color="white", hover_color="grey", text_color="black", bg_color="white",
+                                        border_width=2, border_color="black", font=(fontname, 14),
+                                        command=lambda prompt_=prompt: self.__update_chord_prompts(prompt_))
+            quiz_button.pack(anchor="n", expand=True, padx=10, pady=10)
+
 
 
 x = IntroductoryQuizMenu(launch_immediately=True, root=ctk.CTk())

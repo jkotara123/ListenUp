@@ -30,7 +30,7 @@ listening_steps = 10
 
 
 class GameModeMenu:
-    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None):
+    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, chord_set=None):
         self.menu_frame = None
         self.piano = None
         self.quiz_manager_comm_channel = None
@@ -51,11 +51,11 @@ class GameModeMenu:
 
         self.__prepare_menu(root, octaves)
         self.__prepare_piano(root, octaves, lowest_octave)
-        self.__prepare_quiz_manager(game_mode_prompt)
+        self.__prepare_quiz_manager(game_mode_prompt, chord_set)
         if launch_immediately:
             self.menu_frame.winfo_toplevel().mainloop()
 
-    def __prepare_quiz_manager(self, game_mode_prompt):
+    def __prepare_quiz_manager(self, game_mode_prompt, chord_set=None):
         if game_mode_prompt is not None:
             if game_mode_prompt == "Interval":
                 self.quiz_manager_comm_channel = CommunicationChannel()
@@ -66,7 +66,7 @@ class GameModeMenu:
                 self.quiz_manager_comm_channel = CommunicationChannel()
                 self.quiz_manager_comm_channel.set_menu(self)
                 self.quiz_manager_comm_channel.create_quiz_manager(
-                    "Chord", self.piano, max_listens)
+                    "Chord", self.piano, max_listens, chord_set)
 
     def __prepare_piano(self, root, octaves, lowest_octave):
         self.piano = Piano(root, octaves=octaves, lowest_octave=lowest_octave)

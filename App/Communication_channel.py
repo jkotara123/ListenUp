@@ -13,10 +13,10 @@ class CommunicationChannel:
         self.menu = menu
 
 
-    def create_quiz_manager (self, prompt, piano, max_listens):
+    def create_quiz_manager (self, prompt, piano, max_listens, chord_set=None):
         piano_manager = PianoManager(piano)
         piano.set_piano_manager(piano_manager)
-        question_handler = QuestionHandler(prompt, piano.get_number_of_octaves(), piano.get_lowest_octave())
+        question_handler = QuestionHandler(prompt, piano.get_number_of_octaves(), piano.get_lowest_octave(), chord_set=chord_set)
         self.quiz_manager = QuizManager(self, question_handler, piano_manager, max_listens)
 
 
