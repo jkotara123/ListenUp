@@ -5,6 +5,7 @@ from PIL import Image
 from Interval_game_mode_menu import IntervalGameModeMenu
 from Chord_game_mode_menu import ChordGameModeMenu
 from Game_Modes.GameModeSpecs import GameModeSpecs
+from Settings_menu import SettingsMenu
 pygame.mixer.init()
 pygame.mixer.set_num_channels(16)
 
@@ -25,6 +26,7 @@ def set_root_specs(root, width, height):
 class IntroductoryQuizMenu:
     def __init__(self, root=None, launch_immediately=True):
         self.menu_frame = root
+        self.settings = SettingsMenu(root=root, launch_immediately=False)
         self.launch_quiz_button = None
         self.specs_frame = None
         self.game_mode_specs = GameModeSpecs()
@@ -57,8 +59,18 @@ class IntroductoryQuizMenu:
         if self.current_prompt is not None:
             self.menu_frame.pack_forget()
             game_modes[self.current_prompt](launch_immediately=True,
-                                    root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs)
+                                            root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs,
+                                            measure_time=self.settings.get_measure_time(),
+                                            time=self.settings.get_time())
             self.menu_frame.place(x=0, y=0, relx=1, rely=1)
+
+
+    def __open_settings (self):
+        self.menu_frame.pack_forget()
+        self.settings.launch_manually()
+        set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
+        self.menu_frame.pack(fill=ctk.BOTH)
+        self.menu_frame.winfo_toplevel().mainloop()
 
 
     def launch_manually(self):
@@ -103,10 +115,14 @@ class IntroductoryQuizMenu:
         start_quiz_button = ctk.CTkButton(master=menu_frame, width=20, height=20, text_color="grey", corner_radius=8,
                                           fg_color="white", border_width=2, hover_color="white", font=(fontname, 14), text=f"Start quiz",
                                           command=self.__launch_quiz, border_color="grey")
-        start_quiz_button.place(relx=0.92, rely=0.92, anchor=ctk.CENTER)
+        start_quiz_button.place(relx=0.92, rely=0.95, anchor=ctk.CENTER)
         self.launch_quiz_button = start_quiz_button
 
-
+        open_settings_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
+                                             fg_color="white", border_color="black", border_width=2,
+                                             font=(fontname, 14), text=f"Open settings", hover_color="grey",
+                                             command=self.__open_settings)
+        open_settings_button.place(relx=0.9, rely=0.05, anchor=ctk.CENTER)
 
 
 

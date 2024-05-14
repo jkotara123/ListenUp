@@ -30,7 +30,7 @@ listening_steps = 10
 
 
 class GameModeMenu:
-    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, game_mode_specs=None):
+    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, game_mode_specs=None, measure_time=False, time=0):
         self.menu_frame = None
         self.piano = None
         self.quiz_manager_comm_channel = None
@@ -41,6 +41,12 @@ class GameModeMenu:
         self.listens_left_label = None
         self.next_question_button = None
         self.show_answer_button = None
+        self.timer_label = None
+
+        self.measure_time = measure_time
+        self.time = time
+        self.current_time = time
+        self.stop_flag = False
 
         self.correct_ans_count = 0
         self.incorrect_ans_count = 0
@@ -65,6 +71,26 @@ class GameModeMenu:
 
     def __prepare_piano(self, root, octaves, lowest_octave):
         self.piano = Piano(root, octaves=octaves, lowest_octave=lowest_octave)
+
+
+    def __start_timer (self):
+
+        def internal_timer ():
+            self.current_time = self.time
+            while self.current_time > 0 and not self.stop_flag:
+                self.current_time -= 1
+                self.timer_label.configure(text=f"{self.current_time}")
+                sleep(1)
+            if self.stop_flag:
+                return None
+            else:
+                self.time_thread = None
+                self.answered_incorrectly()
+
+        self.stop_flag = False
+        time_thread = threading.Thread(target=internal_timer)
+        time_thread.start()
+
 
     def play_question(self, unused):
         play_label_width = 288
@@ -124,6 +150,8 @@ class GameModeMenu:
             self.listening_in_progress = False
 
         if not self.listening_in_progress:
+            if self.listens_left == max_listens:
+                self.__start_timer()
             listening_thread = threading.Thread(target=internal_play_question)
             listening_thread.start()
 
@@ -143,6 +171,7 @@ class GameModeMenu:
                 sleep(sleep_time)
                 self.menu_frame.winfo_toplevel().update()
 
+        self.stop_flag = True
         self.answer_given = True
         self.next_question_button.configure(
             text_color="black", hover_color="grey", border_color="black")
@@ -168,6 +197,7 @@ class GameModeMenu:
                 sleep(sleep_time)
                 self.menu_frame.winfo_toplevel().update()
 
+        self.stop_flag = True
         self.answer_given = True
         self.next_question_button.configure(
             text_color="black", hover_color="grey", border_color="black")
@@ -190,6 +220,9 @@ class GameModeMenu:
             self.question_counter_label.configure(
                 text=f"Question {self.question_counter}")
             self.quiz_manager_comm_channel.create_new_question()
+            if self.measure_time:
+                self.current_time = self.time
+                # self.__start_timer()
 
     def show_correct_answer(self):
         if self.answer_given and not self.listening_in_progress:
@@ -284,5 +317,10 @@ class GameModeMenu:
         show_answer_button.place(
             relx=0.5, y=0.85*(vertical_spacing+height), anchor=ctk.CENTER)
         self.show_answer_button = show_answer_button
+
+        if self.measure_time:
+            timer_label = ctk.CTkLabel(master=menu_frame, fg_color="white", text_color="black", text=f"{self.current_time}", font=(fontname, 18))
+            timer_label.place(relx=0.1, rely=0.1, anchor=ctk.CENTER)
+            self.timer_label = timer_label
 
         self.menu_frame = menu_frame

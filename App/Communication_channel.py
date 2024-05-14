@@ -14,8 +14,8 @@ class CommunicationChannel:
     def create_quiz_manager(self, prompt, piano, max_listens, game_mode_specs):
         piano_manager = PianoManager(piano)
         piano.set_piano_manager(piano_manager)
-        question_handler = QuestionHandler(prompt, piano.get_number_of_octaves(
-        ), piano.get_lowest_octave(), game_mode_specs=game_mode_specs)
+        question_handler = QuestionHandler(prompt, piano.get_number_of_octaves(),
+                                           piano.get_lowest_octave(), game_mode_specs=game_mode_specs)
         self.quiz_manager = QuizManager(
             self, question_handler, piano_manager, max_listens)
 
