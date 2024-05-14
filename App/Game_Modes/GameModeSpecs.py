@@ -149,6 +149,8 @@ class GameModeSpecs:
 
     def create_setting_menu(self, root):
         if self.prompt == "Chord":
+            print("Chord")
             return self.chord_setting_menu(root)
         elif self.prompt == "Interval":
+            print("Interval")
             return self.interval_setting_menu(root)

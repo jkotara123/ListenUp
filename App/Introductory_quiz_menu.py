@@ -6,6 +6,7 @@ from Interval_game_mode_menu import IntervalGameModeMenu
 from Chord_game_mode_menu import ChordGameModeMenu
 from Game_Modes.GameModeSpecs import GameModeSpecs
 from Settings_menu import SettingsMenu
+from Specs_menu import SpecsMenu
 pygame.mixer.init()
 pygame.mixer.set_num_channels(16)
 
@@ -30,6 +31,7 @@ class IntroductoryQuizMenu:
         self.launch_quiz_button = None
         self.specs_frame = None
         self.game_mode_specs = GameModeSpecs()
+        self.specs_menu = None
         self.current_prompt = None
         self.__prepare_menu(root)
         if launch_immediately:
@@ -45,12 +47,23 @@ class IntroductoryQuizMenu:
 
 
     def __start_quiz(self, prompt):
-        # self.menu_frame.pack_forget()
+        self.menu_frame.pack_forget()
         self.current_prompt = prompt
-        self.game_mode_specs.set_prompt(prompt)
-        self.__draw_exact_selection_frame()
-        self.launch_quiz_button.configure(hover_color="grey", text_color="black", border_color="black")
-        # game_modes[prompt](launch_immediately=True,
+        self.game_mode_specs.set_prompt(self.current_prompt)
+        self.specs_menu = SpecsMenu(root=self.menu_frame.winfo_toplevel(), prompt=self.current_prompt,
+                                    game_mode_specs=self.game_mode_specs, launch_immediately=True)
+        if self.specs_menu.get_launch():
+            game_modes[self.current_prompt](launch_immediately=True,
+                                            root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs)
+            self.menu_frame.pack(fill=ctk.BOTH)
+        else:
+            self.menu_frame.pack(fill=ctk.BOTH)
+
+
+        # self.game_mode_specs.set_prompt(prompt)
+        # self.__draw_exact_selection_frame()
+        # self.launch_quiz_button.configure(hover_color="grey", text_color="black", border_color="black")
+        # game_modes[self.current_prompt](launch_immediately=True,
         #                    root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs)
         # self.menu_frame.place(x=0, y=0, relx=1, rely=1)
 
@@ -112,17 +125,17 @@ class IntroductoryQuizMenu:
             quiz_button.pack(anchor="n", expand=True, padx=10, pady=10)
 
 
-        start_quiz_button = ctk.CTkButton(master=menu_frame, width=20, height=20, text_color="grey", corner_radius=8,
-                                          fg_color="white", border_width=2, hover_color="white", font=(fontname, 14), text=f"Start quiz",
-                                          command=self.__launch_quiz, border_color="grey")
-        start_quiz_button.place(relx=0.92, rely=0.95, anchor=ctk.CENTER)
-        self.launch_quiz_button = start_quiz_button
-
-        open_settings_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
-                                             fg_color="white", border_color="black", border_width=2,
-                                             font=(fontname, 14), text=f"Open settings", hover_color="grey",
-                                             command=self.__open_settings)
-        open_settings_button.place(relx=0.9, rely=0.05, anchor=ctk.CENTER)
+        # start_quiz_button = ctk.CTkButton(master=menu_frame, width=20, height=20, text_color="grey", corner_radius=8,
+        #                                   fg_color="white", border_width=2, hover_color="white", font=(fontname, 14), text=f"Start quiz",
+        #                                   command=self.__launch_quiz, border_color="grey")
+        # start_quiz_button.place(relx=0.92, rely=0.95, anchor=ctk.CENTER)
+        # self.launch_quiz_button = start_quiz_button
+        #
+        # open_settings_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
+        #                                      fg_color="white", border_color="black", border_width=2,
+        #                                      font=(fontname, 14), text=f"Open settings", hover_color="grey",
+        #                                      command=self.__open_settings)
+        # open_settings_button.place(relx=0.9, rely=0.05, anchor=ctk.CENTER)
 
 
 
