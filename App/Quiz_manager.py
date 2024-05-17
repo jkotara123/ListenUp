@@ -21,6 +21,11 @@ class QuizManager:
                 self.question_handler.get_expected(), "green")
         self.piano_manager.enable()
 
+
+    def destroy_piano (self):
+        self.piano_manager.destroy_piano()
+
+
     def show_correct_answer(self):
         self.piano_manager.disable()
         to_show = self.question_handler.get_question_start()

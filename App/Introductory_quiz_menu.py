@@ -54,9 +54,12 @@ class IntroductoryQuizMenu:
                                     game_mode_specs=self.game_mode_specs, launch_immediately=True)
         if self.specs_menu.get_launch():
             game_modes[self.current_prompt](launch_immediately=True,
-                                            root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs)
+                                            root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs,
+                                            measure_time=self.settings.get_measure_time(), time=self.settings.get_time())
+            set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
             self.menu_frame.pack(fill=ctk.BOTH)
         else:
+            set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
             self.menu_frame.pack(fill=ctk.BOTH)
 
 
@@ -75,6 +78,7 @@ class IntroductoryQuizMenu:
                                             root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs,
                                             measure_time=self.settings.get_measure_time(),
                                             time=self.settings.get_time())
+            set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
             self.menu_frame.place(x=0, y=0, relx=1, rely=1)
 
 
@@ -83,6 +87,8 @@ class IntroductoryQuizMenu:
         self.settings.launch_manually()
         set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
         self.menu_frame.pack(fill=ctk.BOTH)
+        print(self.settings.get_measure_time())
+        print(self.settings.get_time())
         self.menu_frame.winfo_toplevel().mainloop()
 
 
@@ -131,11 +137,11 @@ class IntroductoryQuizMenu:
         # start_quiz_button.place(relx=0.92, rely=0.95, anchor=ctk.CENTER)
         # self.launch_quiz_button = start_quiz_button
         #
-        # open_settings_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
-        #                                      fg_color="white", border_color="black", border_width=2,
-        #                                      font=(fontname, 14), text=f"Open settings", hover_color="grey",
-        #                                      command=self.__open_settings)
-        # open_settings_button.place(relx=0.9, rely=0.05, anchor=ctk.CENTER)
+        open_settings_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
+                                             fg_color="white", border_color="black", border_width=2,
+                                             font=(fontname, 14), text=f"Open settings", hover_color="grey",
+                                             command=self.__open_settings)
+        open_settings_button.place(relx=0.9, rely=0.05, anchor=ctk.CENTER)
 
 
 

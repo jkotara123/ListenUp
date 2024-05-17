@@ -6,6 +6,7 @@ from .Note import *
 
 class Piano:
     def __init__ (self, root=None, octaves=2, lowest_octave=2, piano_manager=None):
+        self.piano_frame = None
         self.piano_manager = piano_manager
         self.lowest_octave = lowest_octave
         self.keys = {}
@@ -106,5 +107,12 @@ class Piano:
 
         create_white_keys()
         create_black_keys()
+        self.piano_frame = piano_frame
+
+
+    def destroy_piano (self):
+        for key_name in self.keys.keys():
+            self.keys[key_name].destroy()
+        self.piano_frame.destroy()
 
 

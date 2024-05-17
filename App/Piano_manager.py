@@ -67,3 +67,7 @@ class PianoManager:
         play_thread = threading.Thread(target=internal_play_sequence)
         play_thread.start()
 
+
+    def destroy_piano (self):
+        self.piano.destroy_piano()
+

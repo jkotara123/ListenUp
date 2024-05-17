@@ -150,7 +150,7 @@ class GameModeMenu:
             self.listening_in_progress = False
 
         if not self.listening_in_progress:
-            if self.listens_left == max_listens:
+            if self.measure_time and self.listens_left == max_listens:
                 self.__start_timer()
             listening_thread = threading.Thread(target=internal_play_question)
             listening_thread.start()
@@ -207,6 +207,8 @@ class GameModeMenu:
         flash_thread.start()
 
     def next_question(self):
+        play_label_width = 288
+        play_label_height = 72
         if self.answer_given:
             self.answer_given = False
             self.question_counter += 1
@@ -219,9 +221,16 @@ class GameModeMenu:
                 text=f"You can listen the question {self.listens_left} more times")
             self.question_counter_label.configure(
                 text=f"Question {self.question_counter}")
+            play_image = Image.open(
+                f"{other_resources_path}/play_sound/play_sound0.png")
+            play_image = play_image.resize(
+                (play_label_width, play_label_height))
+            play_image = ImageTk.PhotoImage(play_image)
+            self.play_label.configure(image=play_image)
             self.quiz_manager_comm_channel.create_new_question()
             if self.measure_time:
                 self.current_time = self.time
+                self.timer_label.configure(text=f"{self.current_time}")
                 # self.__start_timer()
 
     def show_correct_answer(self):
@@ -230,17 +239,26 @@ class GameModeMenu:
             self.quiz_manager_comm_channel.show_correct_answer()
             self.listening_in_progress = False
 
+
+    def __go_back (self):
+        self.stop_flag = False
+        sleep(0.2)
+        self.quiz_manager_comm_channel.destroy_piano()
+        self.menu_frame.pack_forget()
+        self.menu_frame.winfo_toplevel().quit()
+
+
     def __prepare_menu(self, root, octaves):
-        width = int(400+(octaves-1)*(400*0.8))
+        width_ = int(400+(octaves-1)*(400*0.8))
         height = 400
         button_width = int(50*1.25)
         button_height = int(35*1.25)
         play_label_width = 288
         play_label_height = 72
 
-        set_root_specs(root, width, height)
+        set_root_specs(root, width_, height)
         menu_frame = ctk.CTkLabel(
-            master=root, width=width, height=height, bg_color="white", fg_color="white", text="white")
+            master=root, width=width_, height=height, bg_color="white", fg_color="white", text="white")
         menu_frame.pack(fill=ctk.BOTH)
 
         menu_bg_image = Image.open(
@@ -251,13 +269,14 @@ class GameModeMenu:
         bg_image_label.place(x=0, y=0, relheight=1)
         bg_image_label.image = menu_bg_image
 
-        menu_bg_image = Image.open(
+        menu_bg_image_ = Image.open(
             f"{other_resources_path}/gm_background_rev_.png")
-        menu_bg_image = ImageTk.PhotoImage(menu_bg_image)
-        bg_image_label = tk.Label(
-            menu_frame, image=menu_bg_image, text="", bg="white")
-        bg_image_label.place(x=width-menu_bg_image.width(), y=0, relheight=1)
-        bg_image_label.image = menu_bg_image
+        menu_bg_image_ = ImageTk.PhotoImage(menu_bg_image_)
+        bg_image_label_ = tk.Label(
+            menu_frame, image=menu_bg_image_, text="", bg="white")
+        # bg_image_label.place(x=width-menu_bg_image.width(), y=0, relheight=1)
+        bg_image_label_.place(x=width_-200, y=0, relheight=1, anchor="nw")
+        bg_image_label_.image = menu_bg_image_
 
         correct_ans_image = ctk.CTkImage(light_image=Image.open(
             f"{other_resources_path}/white_tick_tbg.png"), size=(button_height//2, button_height//2))
@@ -295,8 +314,14 @@ class GameModeMenu:
         listens_left_label.place(relx=0.5, rely=0.1, anchor=ctk.CENTER)
         self.listens_left_label = listens_left_label
 
-        play_image = ctk.CTkImage(light_image=Image.open(
-            f"{other_resources_path}/play_sound/play_sound0.png"), size=(play_label_width, play_label_height))
+        play_image = Image.open(
+            f"{other_resources_path}/play_sound/play_sound0.png")
+        play_image = play_image.resize(
+            (play_label_width, play_label_height))
+        play_image = ImageTk.PhotoImage(play_image)
+
+        # play_image = ctk.CTkImage(light_image=Image.open(
+        #     f"{other_resources_path}/play_sound/play_sound0.png"), size=(play_label_width, play_label_height))
         play_label = ctk.CTkLabel(master=menu_frame, text="", image=play_image,
                                   width=play_label_width, height=play_label_height)
         play_label.bind("<Button-1>", self.play_question)
@@ -318,9 +343,17 @@ class GameModeMenu:
             relx=0.5, y=0.85*(vertical_spacing+height), anchor=ctk.CENTER)
         self.show_answer_button = show_answer_button
 
+        go_back_button = ctk.CTkButton(master=menu_frame, text="Go back", font=(fontname, 12), fg_color="white",
+                                       bg_color="white", border_width=2, corner_radius=32, border_color="black",
+                                       text_color="black", width=button_width//2, height=button_height//2,
+                                       hover_color="grey",
+                                       command=self.__go_back)
+        go_back_button.place(relx=0.05, rely=0.05)
+
         if self.measure_time:
-            timer_label = ctk.CTkLabel(master=menu_frame, fg_color="white", text_color="black", text=f"{self.current_time}", font=(fontname, 18))
-            timer_label.place(relx=0.1, rely=0.1, anchor=ctk.CENTER)
+            timer_label = ctk.CTkLabel(master=menu_frame, fg_color="white", text_color="black", text=f"{self.current_time}", font=(fontname, 18),
+                                       )
+            timer_label.place(relx=0.9, rely=0.1, anchor=ctk.CENTER)
             self.timer_label = timer_label
 
         self.menu_frame = menu_frame

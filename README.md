@@ -10,3 +10,8 @@ Project for AGH University Python course.
 | Laboratorium 5  | Tworzenie i uwzględnienie statystyk przy losowaniu            | Menu główne (half done)                 |
 | Laboratorium 6  | Użytkownicy i logowanie                                       | Grafiki i elementy personalizacji       |
 | Laboratorium 7  | Finalne poprawki                                              | Finalne poprawki                        |
+
+
+Wymagania użytkowania:
+
+- Zainstalowane bibliteki: tkinter, customtkinter, pygame

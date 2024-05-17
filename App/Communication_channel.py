@@ -33,3 +33,7 @@ class CommunicationChannel:
 
     def show_correct_answer(self):
         self.quiz_manager.show_correct_answer()
+
+    def destroy_piano (self):
+        self.quiz_manager.destroy_piano()
+
