@@ -47,6 +47,32 @@ class DatabaseManager:
                 return False
 
 
+    def get_users_mail_address (self, username):
+        user = self.db.collection("users").document(username)
+        if not user.get().exists:
+            return None
+        else:
+            return user.get().to_dict()["mail"]
+
+
+    def check_users_password (self, username, password):
+        user = self.db.collection("users").document(username)
+        if not user.get().exists:
+            return False
+        elif user.get().to_dict()["password"] != password:
+            return False
+        else:
+            return True
+
+
+    def reset_users_password (self, username, new_password):
+        user = self.db.collection("users").document(username)
+        if user.get().exists:
+            new_user_data = user.get().to_dict()
+            new_user_data["password"] = new_password
+            user.set(new_user_data)
+
+
     def see_correct_ans_for_user_and_mode (self, username, mode):
         user_mode = self.db.collection(mode).document(username)
         user_mode_data = user_mode.get().to_dict()

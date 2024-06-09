@@ -65,7 +65,7 @@ class SignUpMenu:
 
     def send_mail_with_verification_code (self):
         activation_code_characters = string.ascii_letters + string.digits
-        activation_code_length = 12
+        activation_code_length = 6
         activation_code = "".join(random.choices(activation_code_characters, k=activation_code_length))
         self.verification_code = activation_code
 

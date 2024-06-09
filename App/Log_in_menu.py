@@ -4,6 +4,7 @@ from Database_manager import DatabaseManager
 from Sign_up_menu import SignUpMenu
 from Introductory_quiz_menu import IntroductoryQuizMenu
 from Users_assigned_statistician import UsersAssignedStatistician
+from Forgot_password_menu import ForgotPasswordMenu
 
 
 fontname = "Lithos Pro Regular"
@@ -30,7 +31,12 @@ class LogInMenu:
 
 
     def __forgot_password (self):
-        ...
+        self.menu_frame.pack_forget()
+        forgot_password_menu = ForgotPasswordMenu(root=self.menu_frame.winfo_toplevel(), launch_immediately=True,
+                                                  database_manager=self.database_manager)
+        set_root_specs(self.menu_frame.winfo_toplevel(), 612, 331)
+        self.menu_frame.pack(fill=ctk.BOTH)
+        self.menu_frame.winfo_toplevel().mainloop()
 
 
     def __log_in (self):
@@ -60,7 +66,6 @@ class LogInMenu:
                                   database_manager=self.database_manager, launch_immediately=True)
         set_root_specs(self.menu_frame.winfo_toplevel(), 612, 331)
         self.menu_frame.pack(fill=ctk.BOTH)
-        print("Returned")
         self.menu_frame.winfo_toplevel().mainloop()
 
 

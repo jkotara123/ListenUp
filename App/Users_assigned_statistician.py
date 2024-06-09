@@ -12,6 +12,18 @@ class UsersAssignedStatistician:
         self.current_mode = mode
 
 
+    def get_user (self):
+        return self.user
+
+
+    def reset_password (self, new_password):
+        self.database_manager.reset_users_password(self.user, new_password)
+
+
+    def check_password (self, password):
+        return self.database_manager.check_users_password(self.user, password)
+
+
     def increment_correct (self):
         old_correct = self.database_manager.see_correct_ans_for_user_and_mode(self.user, self.current_mode)
         new_correct = old_correct+1

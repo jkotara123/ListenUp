@@ -7,6 +7,7 @@ from Chord_game_mode_menu import ChordGameModeMenu
 from Game_Modes.GameModeSpecs import GameModeSpecs
 from Settings_menu import SettingsMenu
 from Specs_menu import SpecsMenu
+from Reset_password_menu import ResetPasswordMenu
 pygame.mixer.init()
 pygame.mixer.set_num_channels(16)
 
@@ -66,14 +67,6 @@ class IntroductoryQuizMenu:
             self.menu_frame.pack(fill=ctk.BOTH)
 
 
-        # self.game_mode_specs.set_prompt(prompt)
-        # self.__draw_exact_selection_frame()
-        # self.launch_quiz_button.configure(hover_color="grey", text_color="black", border_color="black")
-        # game_modes[self.current_prompt](launch_immediately=True,
-        #                    root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs)
-        # self.menu_frame.place(x=0, y=0, relx=1, rely=1)
-
-
     def __launch_quiz (self):
         if self.current_prompt is not None:
             self.menu_frame.pack_forget()
@@ -90,8 +83,6 @@ class IntroductoryQuizMenu:
         self.settings.launch_manually()
         set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
         self.menu_frame.pack(fill=ctk.BOTH)
-        print(self.settings.get_measure_time())
-        print(self.settings.get_time())
         self.menu_frame.winfo_toplevel().mainloop()
 
 
@@ -103,6 +94,17 @@ class IntroductoryQuizMenu:
     def launch_manually(self):
         if self.menu_frame.winfo_toplevel() is not None:
             self.menu_frame.winfo_toplevel().mainloop()
+
+
+    def __reset_password (self):
+        self.menu_frame.pack_forget()
+        reset_password_menu = ResetPasswordMenu(root=self.menu_frame.winfo_toplevel(),
+                                                statistician=self.statistician,
+                                                launch_immediately=True)
+        set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
+        self.menu_frame.pack(fill=ctk.BOTH)
+
+
 
     def __prepare_menu(self, root):
         width = 600
@@ -120,9 +122,14 @@ class IntroductoryQuizMenu:
         bg_image_label.pack(fill=ctk.BOTH, expand=True)
         bg_image_label.image = menu_bg_image
 
-        text_label = ctk.CTkLabel(master=menu_frame, text="Please choose one of\nthe quiz variants", font=(
+        if self.statistician is None:
+            first_part = "Welcome to ListenUp!\n"
+        else:
+            first_part = f"Happy to see you {self.statistician.get_user()}!\n"
+
+        text_label = ctk.CTkLabel(master=menu_frame, text=first_part+"Please choose one of\nthe quiz variants", font=(
             fontname, 32, "bold"), text_color="black", bg_color="white")
-        text_label.place(relx=0.5, y=width*0.25,
+        text_label.place(relx=0.5, y=width*0.22,
                          anchor=ctk.CENTER, relwidth=0.6)
 
         quiz_mode_sel_frame = ctk.CTkFrame(master=menu_frame, width=0.4*width, height=0.25*height, fg_color="white", bg_color="white"
@@ -151,6 +158,13 @@ class IntroductoryQuizMenu:
         if self.statistician is None:
             log_out_button.configure(text="Go back")
         log_out_button.place(relx=0.1, rely=0.05, anchor=ctk.CENTER)
+
+        if self.statistician:
+            reset_password_button = ctk.CTkButton(master=menu_frame, width=100, height=10, text_color="black",
+                                                  fg_color="white", bg_color="white", border_color="black",
+                                                  border_width=2, corner_radius=8, text="Reset password",
+                                                  hover_color="grey", command=self.__reset_password)
+            reset_password_button.place(relx=0.1, rely=0.95, anchor=ctk.CENTER)
 
 
 # x = IntroductoryQuizMenu(launch_immediately=True, root=ctk.CTk())
