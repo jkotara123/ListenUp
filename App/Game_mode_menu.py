@@ -30,8 +30,9 @@ listening_steps = 10
 
 
 class GameModeMenu:
-    def __init__(self, root=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, game_mode_specs=None, measure_time=False, time=0):
+    def __init__(self, root=None, statistician=None, launch_immediately=True, octaves=2, lowest_octave=2, game_mode_prompt=None, game_mode_specs=None, measure_time=False, time=0):
         self.menu_frame = None
+        self.statistician = statistician
         self.piano = None
         self.quiz_manager_comm_channel = None
         self.correct_ans_button = None
@@ -171,6 +172,11 @@ class GameModeMenu:
                 sleep(sleep_time)
                 self.menu_frame.winfo_toplevel().update()
 
+        def update_database():
+            if self.statistician is not None:
+                self.statistician.increment_correct()
+
+
         self.stop_flag = True
         self.answer_given = True
         self.next_question_button.configure(
@@ -179,6 +185,9 @@ class GameModeMenu:
             text_color="black", hover_color="grey", border_color="black")
         flash_thread = threading.Thread(target=update)
         flash_thread.start()
+        update_database_thread = threading.Thread(target=update_database)
+        update_database_thread.start()
+
 
     def answered_incorrectly(self):
 
@@ -197,6 +206,10 @@ class GameModeMenu:
                 sleep(sleep_time)
                 self.menu_frame.winfo_toplevel().update()
 
+        def update_database():
+            if self.statistician is not None:
+                self.statistician.increment_incorrect()
+
         self.stop_flag = True
         self.answer_given = True
         self.next_question_button.configure(
@@ -205,6 +218,9 @@ class GameModeMenu:
             text_color="black", hover_color="grey", border_color="black")
         flash_thread = threading.Thread(target=update)
         flash_thread.start()
+        update_database_thread = threading.Thread(target=update_database)
+        update_database_thread.start()
+
 
     def next_question(self):
         play_label_width = 288

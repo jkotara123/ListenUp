@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import pygame
 from PIL import Image
-
+from Users_assigned_statistician import UsersAssignedStatistician
 from Interval_game_mode_menu import IntervalGameModeMenu
 from Chord_game_mode_menu import ChordGameModeMenu
 from Game_Modes.GameModeSpecs import GameModeSpecs
@@ -25,8 +25,9 @@ def set_root_specs(root, width, height):
 
 
 class IntroductoryQuizMenu:
-    def __init__(self, root=None, launch_immediately=True):
+    def __init__(self, root=None, statistician=None, launch_immediately=True):
         self.menu_frame = root
+        self.statistician = statistician
         self.settings = SettingsMenu(root=root, launch_immediately=False)
         self.launch_quiz_button = None
         self.specs_frame = None
@@ -53,7 +54,9 @@ class IntroductoryQuizMenu:
         self.specs_menu = SpecsMenu(root=self.menu_frame.winfo_toplevel(), prompt=self.current_prompt,
                                     game_mode_specs=self.game_mode_specs, launch_immediately=True)
         if self.specs_menu.get_launch():
-            game_modes[self.current_prompt](launch_immediately=True,
+            if self.statistician is not None:
+                self.statistician.set_current_mode(self.current_prompt.lower())
+            game_modes[self.current_prompt](launch_immediately=True, statistician=self.statistician,
                                             root=self.menu_frame.winfo_toplevel(), game_mode_specs=self.game_mode_specs,
                                             measure_time=self.settings.get_measure_time(), time=self.settings.get_time())
             set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
@@ -90,6 +93,11 @@ class IntroductoryQuizMenu:
         print(self.settings.get_measure_time())
         print(self.settings.get_time())
         self.menu_frame.winfo_toplevel().mainloop()
+
+
+    def __log_out (self):
+        self.menu_frame.pack_forget()
+        self.menu_frame.winfo_toplevel().quit()
 
 
     def launch_manually(self):
@@ -130,19 +138,19 @@ class IntroductoryQuizMenu:
                                         command=lambda prompt_=prompt: self.__start_quiz(prompt_))
             quiz_button.pack(anchor="n", expand=True, padx=10, pady=10)
 
-
-        # start_quiz_button = ctk.CTkButton(master=menu_frame, width=20, height=20, text_color="grey", corner_radius=8,
-        #                                   fg_color="white", border_width=2, hover_color="white", font=(fontname, 14), text=f"Start quiz",
-        #                                   command=self.__launch_quiz, border_color="grey")
-        # start_quiz_button.place(relx=0.92, rely=0.95, anchor=ctk.CENTER)
-        # self.launch_quiz_button = start_quiz_button
-        #
         open_settings_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
                                              fg_color="white", border_color="black", border_width=2,
                                              font=(fontname, 14), text=f"Open settings", hover_color="grey",
                                              command=self.__open_settings)
         open_settings_button.place(relx=0.9, rely=0.05, anchor=ctk.CENTER)
 
+        log_out_button = ctk.CTkButton(master=menu_frame, width=30, height=20, text_color="black", corner_radius=8,
+                                       fg_color="white", border_color="black", border_width=2,
+                                       font=(fontname, 14), text="Log out", hover_color="grey",
+                                       command=self.__log_out)
+        if self.statistician is None:
+            log_out_button.configure(text="Go back")
+        log_out_button.place(relx=0.1, rely=0.05, anchor=ctk.CENTER)
 
 
-x = IntroductoryQuizMenu(launch_immediately=True, root=ctk.CTk())
+# x = IntroductoryQuizMenu(launch_immediately=True, root=ctk.CTk())
