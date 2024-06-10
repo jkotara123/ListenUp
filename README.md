@@ -2,6 +2,25 @@
 
 Project for AGH University Python course.
 
+Project usage instruction:
+1. Clone the repository. 
+```
+git clone https://github.com/jkotara123/ListenUp.git
+```
+
+2. Download two folders - images and sound_files - from following Google Drive:
+https://drive.google.com/drive/folders/19COOO1Q7eD3nnUKk5nqNCFtAz8bzyuVo?usp=sharing <br />
+Then paste them into *resources* directory.
+
+3. In terminal, enter ListenUp directory and run following code to install all required libraries.
+```
+pip install -r requirements.txt
+```
+4. Now you are able to use the application by running it from the folder *App* view.
+```
+cd App
+python .\main.py
+```
 
 | | Jakub Kotara                                                  | Jan Masternak                           |
 | ------------- |---------------------------------------------------------------|-----------------------------------------|
@@ -12,6 +31,3 @@ Project for AGH University Python course.
 | Laboratorium 7  | Finalne poprawki                                              | Finalne poprawki                        |
 
 
-Wymagania użytkowania:
-
-- Zainstalowane bibliteki: tkinter, customtkinter, pygame

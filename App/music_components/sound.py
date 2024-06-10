@@ -2,7 +2,7 @@ import wave
 import json
 import pygame
 
-with open('resources/config.json', 'r') as f:
+with open("resources/config.json", "r") as f:
     config = json.load(f)
 sound_files_path = config["paths"]["sound_files_path"]
 
@@ -13,12 +13,12 @@ class Sound:
         self.sound: pygame.mixer.Sound = pygame.mixer.Sound(file_path)
         self.duration: float = get_wav_duration(file_path)
 
-    def play(self):
+    def play(self) -> None:
         pygame.mixer.Sound.play(self.sound)
 
 
-def get_wav_duration(file_path):
-    with wave.open(file_path, 'rb') as wav_file:
+def get_wav_duration(file_path) -> float:
+    with wave.open(file_path, "rb") as wav_file:
         num_frames = wav_file.getnframes()
         frame_rate = wav_file.getframerate()
         duration = num_frames / frame_rate

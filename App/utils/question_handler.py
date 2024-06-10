@@ -1,5 +1,6 @@
 from game_modes import Interval
 from game_modes import Chord
+from game_modes import GameModeSpecs
 
 modes = {"interval": Interval, "chord": Chord}
 
@@ -15,7 +16,8 @@ class QuestionHandler:
 
     def create_new_question(self):
         self.question = modes[self.prompt](
-            self.octaves, self.lowest_octave, self.game_mode_specs)
+            self.octaves, self.lowest_octave, self.game_mode_specs
+        )
         print(self.question.get_sequence())
         self.index = 0
 
@@ -23,7 +25,7 @@ class QuestionHandler:
         return self.question.get_expected(self.index)
 
     def get_previously_expected(self):
-        return self.question.get_expected(self.index-1)
+        return self.question.get_expected(self.index - 1)
 
     def get_question_start(self):
         return self.question.get_to_show()
@@ -35,7 +37,7 @@ class QuestionHandler:
         return self.question.get_time_gaps()
 
     def one_left(self):
-        return self.index+1 == self.question.size()
+        return self.index + 1 == self.question.size()
 
     def check_answer(self, note_name):
         if self.get_expected() == note_name:

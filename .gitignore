@@ -8,7 +8,5 @@ App/.idea
 App/.idea/
 __pycache__
 App/__pycache__/
-*App/Confidential/
-*App/Confidential
 *App/resources/images/
 *App/resources/sound_files/
