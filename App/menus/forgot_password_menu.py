@@ -12,38 +12,35 @@ images_path = config["paths"]["images_path"]
 
 
 def set_root_specs(root, width, height):
-    menu_window = root
-    menu_window.geometry(f"{width}x{height}")
-    menu_window.resizable(False, False)
-    menu_window.attributes('-fullscreen', False)
+    root.geometry(f"{width}x{height}")
+    root.resizable(False, False)
+    root.attributes('-fullscreen', False)
 
 
 class ForgotPasswordMenu:
-    def __init__(self, root, database_manager, launch_immediately=True):
-        self.pre_reset_menu_frame = None
-        self.post_reset_menu_frame = None
-        self.database_manager = database_manager
-        self.mail_sender = None
-        self.login_entry = None
-        self.reset_code_entry = None
-        self.password_entry = None
-        self.repeat_password_entry = None
-        self.reset_code = None
-        self.pre_rse_error_label = None
-        self.post_rse_error_label = None
-        self.view_password_checkbox = None
+    def __init__(self, root: ctk.CTk, database_manager: DatabaseManager, launch_immediately: bool=True) -> None:
+        self.pre_reset_menu_frame: ctk.CTkFrame = None
+        self.post_reset_menu_frame: ctk.CTkFrame = None
+        self.database_manager: DatabaseManager = database_manager
+        self.mail_sender: MailSender = None
+        self.login_entry: ctk.CTkEntry = None
+        self.reset_code: str = None
+        self.reset_code_entry: ctk.CTkEntry = None
+        self.password_entry: str = None
+        self.repeat_password_entry: str = None
+        self.pre_rse_error_label: ctk.CTkLabel= None
+        self.post_rse_error_label: ctk.CTkLabel = None
+        self.view_password_checkbox: ctk.CTkCheckBox = None
         self.__create_mail_sender()
         self.__prepare_menu(root)
         if launch_immediately:
             root.mainloop()
 
-    def __send_reset_code_mail(self):
+    def __send_reset_code_mail(self) -> None:
         reset_code_characters = string.ascii_letters + string.digits
         reset_code_length = 6
-        reset_code = "".join(random.choices(
+        self.reset_code = "".join(random.choices(
             reset_code_characters, k=reset_code_length))
-        self.reset_code = reset_code
-
         username = self.login_entry.get()
         if self.database_manager.see_if_username_exists(username):
             mail = self.database_manager.get_users_mail_address(username)
@@ -52,12 +49,12 @@ class ForgotPasswordMenu:
                            username} to be specific) "
                        f"has its password changed\n"
                        f"Your reset password code is as follows: {
-                           reset_code}\n\n"
+                           self.reset_code}\n\n"
                        f"This message was generated and sent automatically, do not reply to it\n")
             self.mail_sender.send_mail(
                 rec=mail, subject="Password reset", message=message)
 
-    def __create_mail_sender(self):
+    def __create_mail_sender(self) -> None:
         with open("Confidential/mail_address.txt", 'r') as file:
             bot_address = file.read()
         with open("Confidential/mail_password.txt", 'r') as file:
@@ -65,7 +62,7 @@ class ForgotPasswordMenu:
         mail_sender = MailSender(bot_address, bot_password)
         self.mail_sender = mail_sender
 
-    def __start_resetting_password(self):
+    def __start_resetting_password(self) -> None:
         given_code = self.reset_code_entry.get()
         if given_code != self.reset_code:
             self.pre_rse_error_label.configure(text="Wrong reset code")
@@ -74,7 +71,7 @@ class ForgotPasswordMenu:
             self.pre_reset_menu_frame.pack_forget()
             self.post_reset_menu_frame.pack(fill=ctk.BOTH)
 
-    def __reset_password(self):
+    def __reset_password(self) -> None:
         new_password = self.password_entry.get()
         repeat_password = self.repeat_password_entry.get()
         if new_password != repeat_password:
@@ -87,7 +84,7 @@ class ForgotPasswordMenu:
             self.__quit_reset_stage()
             self.__go_back()
 
-    def __password_hiding_changed(self):
+    def __password_hiding_changed(self) -> None:
         if self.view_password_checkbox.get() == 1:
             self.password_entry.configure(show='')
             self.repeat_password_entry.configure(show='')
@@ -95,15 +92,15 @@ class ForgotPasswordMenu:
             self.password_entry.configure(show='*')
             self.repeat_password_entry.configure(show='*')
 
-    def __go_back(self):
+    def __go_back(self) -> None:
         self.pre_reset_menu_frame.pack_forget()
         self.pre_reset_menu_frame.winfo_toplevel().quit()
 
-    def __quit_reset_stage(self):
+    def __quit_reset_stage(self) -> None:
         self.post_reset_menu_frame.pack_forget()
         self.pre_reset_menu_frame.pack(fill=ctk.BOTH)
 
-    def __prepare_menu(self, root):
+    def __prepare_menu(self, root) -> None:
         width = 612
         height = 331
         set_root_specs(root, width, height)
@@ -144,7 +141,7 @@ class ForgotPasswordMenu:
                                                fg_color="white", bg_color="white", hover_color="grey", corner_radius=8,
                                                border_width=2, border_color="black",
                                                command=self.__send_reset_code_mail,
-                                               text="Set email with reset code",
+                                               text="Send email with reset code",
                                                width=100, height=10)
         send_reset_code_button.place(
             relx=0.5, rely=top+3*padding, anchor=ctk.CENTER)
