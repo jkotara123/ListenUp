@@ -1,0 +1,45 @@
+{
+    "note_names": ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"],
+    "white_names": ["C", "D", "E", "F", "G", "A", "B"],
+    "black_names": ["Db", "Eb", "Gb", "Ab", "Bb"],
+    "chord_types": {
+        "Major root": [0, 4, 7],
+        "Major 1st inv.": [0, 3, 8],
+        "Major 2nd inv.": [0, 5, 9],
+        "Dominant 7th": [0, 4, 7, 10],
+        "Maj7": [0, 4, 7, 11],
+        "Minor root": [0, 3, 7],
+        "Minor 1st inv.": [0, 4, 9],
+        "Minor 2nd inv.": [0, 5, 8],
+        "Minor7": [0, 3, 7, 10],
+        "Diminished": [0, 3, 6, 9]
+    },
+    "interval_types": {
+        "Unison": [0, 0],
+        "Minor second": [0, 1],
+        "Major second": [0, 2],
+        "Minor third": [0, 3],
+        "Major third": [0, 4],
+        "Perfect fourth": [0, 5],
+        "Tritone": [0, 6],
+        "Perfect fifth": [0, 7],
+        "Minor sixth": [0, 8],
+        "Major sixth": [0, 9],
+        "Minor seventh": [0, 10],
+        "Major seventh": [0, 11],
+        "Octave": [0, 12]
+    },
+    "chord_names": [
+        "Major root", "Major 1st inv.",
+        "Major 2nd inv.", "Dominant 7th",
+        "Maj7", "Minor root", "Minor 1st inv.",
+        "Minor 2nd inv.", "Minor7", "Diminished"
+    ],
+    "interval_names": [
+        "Unison", "Minor second", "Major second",
+        "Minor third", "Major third", "Perfect fourth",
+        "Tritone", "Perfect fifth", "Minor sixth",
+        "Major sixth", "Minor seventh", 
+        "Major seventh", "Octave"
+    ]
+}
