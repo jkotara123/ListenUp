@@ -20,7 +20,8 @@ def set_root_specs(root, width, height):
 
 class LogInMenu:
     def __init__(self, root, launch_immediately=True):
-        self.database_manager = DatabaseManager("Confidential/database_file.json")
+        self.database_manager = DatabaseManager(
+            "Confidential/database_file.json")
         self.menu_frame = None
         self.login_entry = None
         self.password_entry = None
@@ -29,8 +30,7 @@ class LogInMenu:
         if launch_immediately:
             root.mainloop()
 
-
-    def __forgot_password (self):
+    def __forgot_password(self):
         self.menu_frame.pack_forget()
         forgot_password_menu = ForgotPasswordMenu(root=self.menu_frame.winfo_toplevel(), launch_immediately=True,
                                                   database_manager=self.database_manager)
@@ -38,15 +38,15 @@ class LogInMenu:
         self.menu_frame.pack(fill=ctk.BOTH)
         self.menu_frame.winfo_toplevel().mainloop()
 
-
-    def __log_in (self):
+    def __log_in(self):
         username = self.login_entry.get()
         password = self.password_entry.get()
         if self.database_manager.see_if_user_can_be_logged_in(username, password):
             self.error_label.configure(text="")
             self.login_entry.delete(0, ctk.END)
             self.password_entry.delete(0, ctk.END)
-            users_assigned_statistician = UsersAssignedStatistician(username, self.database_manager)
+            users_assigned_statistician = UsersAssignedStatistician(
+                username, self.database_manager)
             self.menu_frame.pack_forget()
             introductory_menu = IntroductoryQuizMenu(root=self.menu_frame.winfo_toplevel(), launch_immediately=True,
                                                      statistician=users_assigned_statistician)
@@ -55,12 +55,13 @@ class LogInMenu:
             self.menu_frame.winfo_toplevel().mainloop()
         else:
             if not self.database_manager.see_if_username_exists(username):
-                self.error_label.configure(text="No such user has ever been registered")
+                self.error_label.configure(
+                    text="No such user has ever been registered")
             else:
-                self.error_label.configure(text="Incorrect password and/or login")
+                self.error_label.configure(
+                    text="Incorrect password and/or login")
 
-
-    def __sign_up (self):
+    def __sign_up(self):
         self.menu_frame.pack_forget()
         sign_up_menu = SignUpMenu(root=self.menu_frame.winfo_toplevel(),
                                   database_manager=self.database_manager, launch_immediately=True)
@@ -68,8 +69,7 @@ class LogInMenu:
         self.menu_frame.pack(fill=ctk.BOTH)
         self.menu_frame.winfo_toplevel().mainloop()
 
-
-    def __enter_as_guest (self):
+    def __enter_as_guest(self):
         self.error_label.configure(text="")
         self.login_entry.delete(0, ctk.END)
         self.password_entry.delete(0, ctk.END)
@@ -80,8 +80,7 @@ class LogInMenu:
         self.menu_frame.pack(fill=ctk.BOTH)
         self.menu_frame.winfo_toplevel().mainloop()
 
-
-    def __prepare_menu (self, root):
+    def __prepare_menu(self, root):
         width = 612
         height = 331
         entry_width = 200
@@ -132,7 +131,8 @@ class LogInMenu:
                                                hover_color="grey", border_color="black", border_width=1,
                                                width=12, height=8,
                                                command=self.__forgot_password)
-        forgot_password_button.place(relx=0.5, rely=top+5*padding, anchor=ctk.CENTER)
+        forgot_password_button.place(
+            relx=0.5, rely=top+5*padding, anchor=ctk.CENTER)
 
         log_in_button = ctk.CTkButton(master=menu_frame, text_color="black", font=(fontname, 14),
                                       text="Log in", corner_radius=8, fg_color="white",
@@ -148,7 +148,8 @@ class LogInMenu:
                                        border_color="black", border_width=2,
                                        width=100, height=10,
                                        command=self.__sign_up)
-        sign_up_button.place(relx=0.4, rely=top + 7 * padding, anchor=ctk.CENTER)
+        sign_up_button.place(relx=0.4, rely=top + 7 *
+                             padding, anchor=ctk.CENTER)
 
         enter_as_guest_button = ctk.CTkButton(master=menu_frame, text_color="black", font=(fontname, 14),
                                               text="Enter as guest", corner_radius=8, hover_color="grey",
@@ -156,7 +157,8 @@ class LogInMenu:
                                               border_color="black", border_width=2,
                                               width=100, height=10,
                                               command=self.__enter_as_guest)
-        enter_as_guest_button.place(relx=0.6, rely=top+7*padding, anchor=ctk.CENTER)
+        enter_as_guest_button.place(
+            relx=0.6, rely=top+7*padding, anchor=ctk.CENTER)
 
         error_label = ctk.CTkLabel(master=menu_frame, text_color="red", font=(fontname, 10), text="",
                                    fg_color="white", bg_color="white")
@@ -165,10 +167,3 @@ class LogInMenu:
 
 
 log_in_window = LogInMenu(root=ctk.CTk(), launch_immediately=True)
-
-
-
-
-
-
-

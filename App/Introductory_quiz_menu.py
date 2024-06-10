@@ -8,6 +8,7 @@ from Game_Modes.GameModeSpecs import GameModeSpecs
 from Settings_menu import SettingsMenu
 from Specs_menu import SpecsMenu
 from Reset_password_menu import ResetPasswordMenu
+from Statistics_menu import Statistics_menu
 pygame.mixer.init()
 pygame.mixer.set_num_channels(16)
 
@@ -26,7 +27,7 @@ def set_root_specs(root, width, height):
 
 
 class IntroductoryQuizMenu:
-    def __init__(self, root=None, statistician=None, launch_immediately=True):
+    def __init__(self, root=None, statistician: UsersAssignedStatistician = None, launch_immediately: bool = True):
         self.menu_frame = root
         self.statistician = statistician
         self.settings = SettingsMenu(root=root, launch_immediately=False)
@@ -35,18 +36,21 @@ class IntroductoryQuizMenu:
         self.game_mode_specs = GameModeSpecs()
         self.specs_menu = None
         self.current_prompt = None
+        self.stats_frame = None
+        # self.stats = Statistics_menu(
+        #     root, statistician.user, statistician.database_manager, launch_immediately=False)
+        # print("aa")
         self.__prepare_menu(root)
         if launch_immediately:
             self.menu_frame.winfo_toplevel().mainloop()
 
-
-    def __draw_exact_selection_frame (self):
+    def __draw_exact_selection_frame(self):
         if self.specs_frame is not None:
             self.specs_frame.destroy()
-        frame = self.game_mode_specs.create_setting_menu(root=self.menu_frame.winfo_toplevel())
+        frame = self.game_mode_specs.create_setting_menu(
+            root=self.menu_frame.winfo_toplevel())
         frame.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
         self.specs_frame = frame
-
 
     def __start_quiz(self, prompt):
         self.menu_frame.pack_forget()
@@ -66,8 +70,7 @@ class IntroductoryQuizMenu:
             set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
             self.menu_frame.pack(fill=ctk.BOTH)
 
-
-    def __launch_quiz (self):
+    def __launch_quiz(self):
         if self.current_prompt is not None:
             self.menu_frame.pack_forget()
             game_modes[self.current_prompt](launch_immediately=True,
@@ -77,26 +80,22 @@ class IntroductoryQuizMenu:
             set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
             self.menu_frame.place(x=0, y=0, relx=1, rely=1)
 
-
-    def __open_settings (self):
+    def __open_settings(self):
         self.menu_frame.pack_forget()
         self.settings.launch_manually()
         set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
         self.menu_frame.pack(fill=ctk.BOTH)
         self.menu_frame.winfo_toplevel().mainloop()
 
-
-    def __log_out (self):
+    def __log_out(self):
         self.menu_frame.pack_forget()
         self.menu_frame.winfo_toplevel().quit()
-
 
     def launch_manually(self):
         if self.menu_frame.winfo_toplevel() is not None:
             self.menu_frame.winfo_toplevel().mainloop()
 
-
-    def __reset_password (self):
+    def __reset_password(self):
         self.menu_frame.pack_forget()
         reset_password_menu = ResetPasswordMenu(root=self.menu_frame.winfo_toplevel(),
                                                 statistician=self.statistician,
@@ -104,7 +103,13 @@ class IntroductoryQuizMenu:
         set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
         self.menu_frame.pack(fill=ctk.BOTH)
 
+    def __open_stats(self, root):
+        self.menu_frame.pack_forget()
+        stats_menu = Statistics_menu(self.menu_frame.winfo_toplevel(
+        ), self.statistician.user, self.statistician.database_manager, launch_immediately=True)
 
+        set_root_specs(self.menu_frame.winfo_toplevel(), 600, 600)
+        self.menu_frame.pack(fill=ctk.BOTH)
 
     def __prepare_menu(self, root):
         width = 600
@@ -166,5 +171,10 @@ class IntroductoryQuizMenu:
                                                   hover_color="grey", command=self.__reset_password)
             reset_password_button.place(relx=0.1, rely=0.95, anchor=ctk.CENTER)
 
+            reset_password_button = ctk.CTkButton(master=menu_frame, width=100, height=10, text_color="black",
+                                                  fg_color="white", bg_color="white", border_color="black",
+                                                  border_width=2, corner_radius=8, text="Statistics",
+                                                  hover_color="grey", command=lambda _root=root: self.__open_stats(_root))
+            reset_password_button.place(relx=0.9, rely=0.95, anchor=ctk.CENTER)
 
 # x = IntroductoryQuizMenu(launch_immediately=True, root=ctk.CTk())
