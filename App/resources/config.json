@@ -1,0 +1,17 @@
+{
+    "paths": {
+        "images_path": "resources/images",
+        "sound_files_path": "resources/sound_files"
+        },
+    "fontname": "Lithos Pro Regular",
+    "quiz_settings": {
+        "max_listens": 3,
+        "listening_steps": 10
+    },
+    "key_coloring" : {
+        "green": ["green2", "green3", "green4"],
+        "red": ["red", "red2", "red3"],
+        "blue": ["DodgerBlue2", "DodgerBlue3", "DodgerBlue4"],
+        "gold": ["goldenrod1", "goldenrod2", "goldenrod3"]
+    }
+}
