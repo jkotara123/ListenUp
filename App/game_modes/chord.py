@@ -25,10 +25,15 @@ class Chord(Quizzable):
         )
         self.base_note: str = self.sound_sequence[0]
         choose_to_show = [i + 1 for i in range(len(self.intervals) - 1)]
+        number_of_notes_to_show = specs.get_number_of_notes_to_show()
+        if number_of_notes_to_show == 3 and len(self.intervals) == 3:
+            number_of_notes_to_show -= 1
         self.to_show: list[int] = [0] + random.sample(
-            choose_to_show, specs.get_number_of_notes_to_show() - 1
+            choose_to_show, number_of_notes_to_show - 1
         )
-        self.time_gaps: list[float] = [0.2 for _ in range(len(self.intervals) - 1)]
+        # print(self.to_show)
+        time_gap = specs.get_time_gap()
+        self.time_gaps: list[float] = [time_gap for _ in range(len(self.intervals) - 1)]
         self.expected: list[int] = [
             i for i in range(len(self.intervals)) if i not in self.to_show
         ]
