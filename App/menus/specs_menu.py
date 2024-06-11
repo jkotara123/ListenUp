@@ -70,7 +70,7 @@ class SpecsMenu:
         instruction_label = ctk.CTkLabel(
             master=menu_frame,
             text_color="black",
-            text="Please specify how\nthe question should be\ngenerated",
+            text=f"Specify generated {self.prompt}s",
             font=(fontname, 20),
         )
         instruction_label.place(relx=0.5, rely=0.25, anchor=ctk.CENTER)

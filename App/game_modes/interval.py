@@ -26,7 +26,7 @@ class Interval(Quizzable):
             self.sound_sequence.reverse()
         self.to_show = [0]
         self.expected = [1]
-        self.time_gaps = [0.6]
+        self.time_gaps = [specs.get_time_gap()]
 
     def set_time_gaps(self, time_gaps: list[float]) -> None:
         self.time_gaps = time_gaps

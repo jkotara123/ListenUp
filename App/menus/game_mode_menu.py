@@ -29,7 +29,9 @@ def set_root_specs(root, width, height) -> None:
 
 
 class GameModeMenu:
-    def __init__(self, root: ctk.CTk = None,
+    def __init__(
+        self,
+        root: ctk.CTk = None,
         statistician: UsersAssignedStatistician = None,
         launch_immediately: bool = True,
         octaves: int = 2,
@@ -127,36 +129,28 @@ class GameModeMenu:
                 )
             elif self.listens_left == 1:
                 self.listens_left_label.configure(
-                    text=f"You can listen to the question {
-                        self.listens_left} more time"
+                    text=f"You can listen to the question {self.listens_left} more time"
                 )
             else:
                 self.listens_left_label.configure(
-                    text=f"You can listen to the question {
-                        self.listens_left} more times"
+                    text=f"You can listen to the question {self.listens_left} more times"
                 )
 
             for i in range(1, listening_steps + 1):
-                play_image = Image.open(
-                    f"{images_path}/play_sound/play_sound{i}.png")
-                play_image = play_image.resize(
-                    (play_label_width, play_label_height))
+                play_image = Image.open(f"{images_path}/play_sound/play_sound{i}.png")
+                play_image = play_image.resize((play_label_width, play_label_height))
                 play_image = ImageTk.PhotoImage(play_image)
                 self.play_label.configure(image=play_image)
                 sleep(sleep_time)
 
             if self.listens_left == 0:
-                play_image = Image.open(
-                    f"{images_path}/play_sound/play_sound_grey.png")
-                play_image = play_image.resize(
-                    (play_label_width, play_label_height))
+                play_image = Image.open(f"{images_path}/play_sound/play_sound_grey.png")
+                play_image = play_image.resize((play_label_width, play_label_height))
                 play_image = ImageTk.PhotoImage(play_image)
                 self.play_label.configure(image=play_image)
             else:
-                play_image = Image.open(
-                    f"{images_path}/play_sound/play_sound{0}.png")
-                play_image = play_image.resize(
-                    (play_label_width, play_label_height))
+                play_image = Image.open(f"{images_path}/play_sound/play_sound{0}.png")
+                play_image = play_image.resize((play_label_width, play_label_height))
                 play_image = ImageTk.PhotoImage(play_image)
                 self.play_label.configure(image=play_image)
 
@@ -205,8 +199,7 @@ class GameModeMenu:
 
         def update():
             self.incorrect_ans_count += 1
-            self.incorrect_ans_button.configure(
-                text=f"{self.incorrect_ans_count}")
+            self.incorrect_ans_button.configure(text=f"{self.incorrect_ans_count}")
             flash_duration = 0.8
             sleep_time = flash_duration / (2 * len(red))
             for i in range(1, len(green)):
@@ -249,16 +242,13 @@ class GameModeMenu:
                 text_color="grey", hover_color="white", border_color="grey"
             )
             self.listens_left_label.configure(
-                text=f"You can listen the question {
-                    self.listens_left} more times"
+                text=f"You can listen the question {self.listens_left} more times"
             )
             self.question_counter_label.configure(
                 text=f"Question {self.question_counter}"
             )
-            play_image = Image.open(
-                f"{images_path}/play_sound/play_sound0.png")
-            play_image = play_image.resize(
-                (play_label_width, play_label_height))
+            play_image = Image.open(f"{images_path}/play_sound/play_sound0.png")
+            play_image = play_image.resize((play_label_width, play_label_height))
             play_image = ImageTk.PhotoImage(play_image)
             self.play_label.configure(image=play_image)
             self.quiz_manager_comm_channel.create_new_question()
@@ -300,8 +290,7 @@ class GameModeMenu:
 
         menu_bg_image = Image.open(f"{images_path}/gm_background_.png")
         menu_bg_image = ImageTk.PhotoImage(menu_bg_image)
-        bg_image_label = tk.Label(
-            menu_frame, image=menu_bg_image, text="", bg="white")
+        bg_image_label = tk.Label(menu_frame, image=menu_bg_image, text="", bg="white")
         bg_image_label.place(x=0, y=0, relheight=1)
         bg_image_label.image = menu_bg_image
 

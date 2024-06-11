@@ -11,10 +11,21 @@ class GameModeSpecs:
     def __init__(self, prompt: str = None, number_of_notes_to_show: int = 1) -> None:
         self.prompt: str = prompt
         self._selected_types: set[str] = set()
-        self._number_of_notes_to_show: int = number_of_notes_to_show
+        self._number_of_notes_to_show: ctk.IntVar = ctk.IntVar(
+            value=number_of_notes_to_show
+        )
+        if self.prompt == "interval":
+            self._time_gap = ctk.DoubleVar(value=0.4)
+        else:
+            self._time_gap = ctk.DoubleVar(value=0.2)
+        self._time_gap_label: ctk.CTkLabel = None
 
     def set_prompt(self, new_prompt: str) -> None:
         self.prompt = new_prompt
+        if self.prompt == "interval":
+            self._time_gap = ctk.DoubleVar(value=0.4)
+        else:
+            self._time_gap = ctk.DoubleVar(value=0.2)
         self.reset()
 
     def contain(self, arg: str) -> bool:
@@ -37,7 +48,32 @@ class GameModeSpecs:
         return self._selected_types
 
     def get_number_of_notes_to_show(self) -> int:
-        return self._number_of_notes_to_show
+        return self._number_of_notes_to_show.get()
+
+    def get_time_gap(self) -> float:
+        return self._time_gap.get()
+
+    def time_gap_slider(self, root: ctk.CTk) -> ctk.CTkFrame:
+        def update_time_gap_label(value):
+            self._time_gap_label.configure(
+                text=f"Inter-note interval: {self._time_gap.get():.2f}s"
+            )
+
+        panel = ctk.CTkFrame(master=root, fg_color="white")
+        self._time_gap_label = ctk.CTkLabel(
+            master=panel, text=f"Inter-note interval: {self._time_gap.get():.2f}s"
+        )
+        self._time_gap_label.grid(row=1, column=0, columnspan=4, pady=10)
+
+        slider = ctk.CTkSlider(
+            master=panel,
+            from_=0.0,
+            to=0.6,
+            variable=self._time_gap,
+            command=update_time_gap_label,
+        )
+        slider.grid(row=0, column=0, columnspan=4, pady=10)
+        return panel
 
     def interval_setting_menu(self, root: ctk.CTk) -> ctk.CTkFrame:
 
@@ -91,6 +127,9 @@ class GameModeSpecs:
 
         all_button.grid(row=0, column=0, columnspan=3, pady=10)
 
+        slider = self.time_gap_slider(panel)
+        slider.grid(row=7, column=0, columnspan=4, pady=10)
+
         return panel
 
     def chord_setting_menu(self, root: ctk.CTk) -> ctk.CTkFrame:
@@ -132,7 +171,7 @@ class GameModeSpecs:
                     offvalue="off",
                     command=lambda i=index: chord_command(i),
                 )
-                checkbox.grid(row=row + 2, column=col, padx=10, pady=5, sticky="nsew")
+                checkbox.grid(row=row + 3, column=col, padx=10, pady=5, sticky="nsew")
                 checkboxes.append(checkbox)
                 index += 1
         major_button = ctk.CTkCheckBox(
@@ -142,7 +181,7 @@ class GameModeSpecs:
             offvalue="off",
             command=lambda mode="major": major_command(mode),
         )
-        major_button.grid(row=1, column=0, pady=5, columnspan=2, sticky="ns")
+        major_button.grid(row=2, column=0, pady=5, columnspan=2, sticky="ns")
 
         minor_button = ctk.CTkCheckBox(
             master=panel,
@@ -151,8 +190,20 @@ class GameModeSpecs:
             offvalue="off",
             command=lambda mode="minor": major_command(mode),
         )
-        minor_button.grid(row=1, column=2, pady=5, columnspan=2, sticky="ns")
-        # panel.place(relx=0.5, rely=0.65)
+        minor_button.grid(row=2, column=2, pady=5, columnspan=2, sticky="ns")
+
+        options = ["1", "2", "3"]
+
+        option_menu_label = ctk.CTkLabel(panel, text="Notes to show:")
+        option_menu_label.grid(row=0, column=0, columnspan=4, pady=5, sticky="ns")
+        option_menu = ctk.CTkOptionMenu(
+            master=panel, values=options, variable=self._number_of_notes_to_show
+        )
+        option_menu.grid(row=1, column=0, columnspan=4, pady=5, sticky="ns")
+
+        slider = self.time_gap_slider(panel)
+        slider.grid(row=7, column=0, columnspan=4, pady=10)
+
         return panel
 
     def create_setting_menu(self, root: ctk.CTk) -> ctk.CTkFrame:
