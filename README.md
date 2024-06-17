@@ -22,6 +22,16 @@ cd App
 python .\main.py
 ```
 
+5. Create a new gmail address and copy it into mail_address.txt file in the Confidential directory.
+
+6. Enable two step verification for that gmail address and generate an app password on this site: (https://myaccount.google.com/)
+
+7. Copy the created app password into the mail_password.txt file in the Confidential direcotry.
+
+8. Lastly, create a new Google Firestore project (https://console.firebase.google.com/) and generate new private python key 
+(do it by going to Settings -> Service Accounts and clicking Generate new private key with Python selected). Rename the dowloaded json file to
+database_file.json and place it in the Confidential directory.
+
 | | Jakub Kotara                                                  | Jan Masternak                           |
 | ------------- |---------------------------------------------------------------|-----------------------------------------|
 | Laboratorium 3  | Model wirtualnego pianina (done)                              | Podłączenie dźwięków do klawiszy (done) |

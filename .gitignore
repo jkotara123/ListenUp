@@ -10,3 +10,6 @@ __pycache__
 App/__pycache__/
 *App/resources/images/
 *App/resources/sound_files/
+*App/Confidential/database_file.json
+*App/Confidential/mail_address.txt
+*App/Confidential/mail_password.txt

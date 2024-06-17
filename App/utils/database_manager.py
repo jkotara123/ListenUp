@@ -1,5 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
+import hashlib
 
 
 class DatabaseManager:
@@ -15,7 +16,10 @@ class DatabaseManager:
     def add_user(self, username: str, mail: str, password: str) -> None:
         if not self.see_if_username_exists(username):
             users = self.db.collection("users")
-            users.document(username).set({"mail": mail, "password": password})
+            hash_object = hashlib.sha256()
+            hash_object.update(password.encode('utf-8'))
+            hashed_hex_password = hash_object.hexdigest()
+            users.document(username).set({"mail": mail, "password": hashed_hex_password})
             interval_answers = self.db.collection("interval")
             interval_answers.document(username).set({"correct": 0, "incorrect": 0})
             chord_answers = self.db.collection("chord")
@@ -26,8 +30,11 @@ class DatabaseManager:
         if not user.get().exists:
             return False
         else:
+            hash_object = hashlib.sha256()
+            hash_object.update(password.encode('utf-8'))
+            hashed_hex_password = hash_object.hexdigest()
             user_data = user.get().to_dict()
-            if user_data["password"] == password:
+            if user_data["password"] == hashed_hex_password:
                 return True
             else:
                 return False
@@ -41,9 +48,12 @@ class DatabaseManager:
 
     def check_users_password(self, username: str, password: str) -> bool:
         user = self.db.collection("users").document(username)
+        hash_object = hashlib.sha256()
+        hash_object.update(password.encode('utf-8'))
+        hashed_hex_password = hash_object.hexdigest()
         if not user.get().exists:
             return False
-        elif user.get().to_dict()["password"] != password:
+        elif user.get().to_dict()["password"] != hashed_hex_password:
             return False
         else:
             return True
@@ -52,7 +62,10 @@ class DatabaseManager:
         user = self.db.collection("users").document(username)
         if user.get().exists:
             new_user_data = user.get().to_dict()
-            new_user_data["password"] = new_password
+            hash_object = hashlib.sha256()
+            hash_object.update(new_password.encode('utf-8'))
+            hashed_hex_new_password = hash_object.hexdigest()
+            new_user_data["password"] = hashed_hex_new_password
             user.set(new_user_data)
 
     def see_correct_ans_for_user_and_mode(self, username: str, mode: str) -> int:
@@ -76,3 +89,4 @@ class DatabaseManager:
         new_user_mode_data = user_mode.get().to_dict()
         new_user_mode_data["incorrect"] = new_incorrect
         user_mode.update(new_user_mode_data)
+
